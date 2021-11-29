@@ -70,7 +70,10 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(
+    git
+    colored-man-pages
+)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -102,7 +105,7 @@ source $ZSH/oh-my-zsh.sh
 #
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/ubuntu/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$('/home/ubuntu/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
@@ -114,8 +117,6 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
-conda activate argos
-cd argos-cyber
 
 # Git completions downloaded from:
 # https://github.com/git/git/blob/master/contrib/completion/git-completion.zsh
