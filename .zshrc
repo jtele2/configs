@@ -102,6 +102,7 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+alias rm='echo "This is not the command you are looking for."; false'
 #
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
