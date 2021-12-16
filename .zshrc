@@ -122,3 +122,12 @@ unset __conda_setup
 # Git completions downloaded from:
 # https://github.com/git/git/blob/master/contrib/completion/git-completion.zsh
 fpath=(~/.zsh $fpath)
+
+# Zscaler certificate stores
+export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+
+# Port forwarding for argos demo. 
+alias demo_argos_http="ssh -fNT i-0abc89187f1e2e2aa.us-east-2 -L 8080:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:80 && ssh -fNT i-0abc89187f1e2e2aa.us-east-2 -L 9090:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:9090 && ssh -fNT i-0abc89187f1e2e2aa.us-east-2 -L 5000:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:5000"
+alias demo_argos_https="ssh -fNT i-0abc89187f1e2e2aa.us-east-2 -L 8443:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:443"
+alias demo_argos_exit="ssh -TO exit i-0abc89187f1e2e2aa.us-east-2"
