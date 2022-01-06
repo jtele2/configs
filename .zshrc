@@ -141,3 +141,7 @@ complete -C '/usr/local/bin/aws_completer' aws
 
 # AWS SSM aliases
 alias ssm_my_sessions='aws ssm describe-sessions --state "Active" --filters "key=Owner,value=arn:aws:iam::751486495581:user/josiah.caprino"'
+
+# Argos front end aliases
+# alias threat_view_cols='curl -k https://localhost:8443/argos-services/ColumnMapping'
+# alias host_view_cols='curl -k https://localhost:8443/argos-services/ColumnMapping?index_type=host'
