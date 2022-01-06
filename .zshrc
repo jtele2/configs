@@ -130,7 +130,7 @@ export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 
 # Port forwarding for argos demo. 
 alias demo_argos_http="ssh -NT i-0abc89187f1e2e2aa.us-east-2 -L 8080:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:80 && ssh -NT i-0abc89187f1e2e2aa.us-east-2 -L 9090:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:9090 && ssh -NT i-0abc89187f1e2e2aa.us-east-2 -L 5000:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:5000"
-alias demo_argos_https="ssh -NT i-0abc89187f1e2e2aa.us-east-2 -L 8443:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:443"
+alias demo_argos_https="ssh -NTv i-0abc89187f1e2e2aa.us-east-2 -L 8443:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:443"
 alias demo_argos_exit="ssh -TO exit i-0abc89187f1e2e2aa.us-east-2"
 
 # AWS command line completion
