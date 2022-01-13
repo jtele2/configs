@@ -73,6 +73,8 @@ ZSH_THEME="robbyrussell"
 plugins=(
     git
     colored-man-pages
+    docker
+    docker-compose
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -145,3 +147,7 @@ alias ssm_my_sessions='aws ssm describe-sessions --state "Active" --filters "key
 # Argos front end aliases
 # alias threat_view_cols='curl -k https://localhost:8443/argos-services/ColumnMapping'
 # alias host_view_cols='curl -k https://localhost:8443/argos-services/ColumnMapping?index_type=host'
+
+# AWS EC2 aliases
+alias check_status_ec2='aws ec2 describe-instance-status --instance-ids i-0abc89187f1e2e2aa'
+alias shut_off_ec2='aws ec2 stop-instances --instance-ids i-0abc89187f1e2e2aa'
