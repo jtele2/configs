@@ -141,3 +141,8 @@ complete -C '/usr/local/bin/aws_completer' aws
 
 # AWS SSM aliases
 alias ssm_my_sessions='aws ssm describe-sessions --state "Active" --filters "key=Owner,value=arn:aws:iam::751486495581:user/josiah.caprino"'
+
+# EC2 aliases
+alias start_ec2_cpu='aws ec2 start-instances --instance-ids i-0abc89187f1e2e2aa'
+alias check_ec2_cpu='aws ec2 describe-instance-status --instance-ids i-0abc89187f1e2e2aa'
+alias stop_ec2_cpu='aws ec2 stop-instances --instance-ids i-0abc89187f1e2e2aa'
