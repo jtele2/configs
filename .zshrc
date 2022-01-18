@@ -153,4 +153,7 @@ alias ec2_describe_gpu='aws ec2 describe-instance-status --instance-ids i-0287a5
 alias ec2_stop_gpu='aws ec2 stop-instances --instance-ids i-0287a5934a75889e2'
 alias ec2_restart_cpu='aws ec2 reboot-instances --instance-ids i-0abc89187f1e2e2aa'
 alias ec2_restart_gpu='aws ec2 reboot-instances --instance-ids i-0287a5934a75889e2'
-alias ps='ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Size}}\t{{.Ports}}"' 
+alias dps='sudo docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Size}}\t{{.Ports}}"' 
+
+# Kubectl
+source <(kubectl completion zsh)
