@@ -149,19 +149,26 @@ alias ssm_my_sessions='aws ssm describe-sessions --state "Active" --filters "key
 alias ec2_start_cpu='aws ec2 start-instances --instance-ids i-0abc89187f1e2e2aa'
 alias ec2_describe_cpu='aws ec2 describe-instance-status --instance-ids i-0abc89187f1e2e2aa'
 alias ec2_stop_cpu='aws ec2 stop-instances --instance-ids i-0abc89187f1e2e2aa'
-alias ec2_start_gpu='aws ec2 start-instances --instance-ids i-0287a5934a75889e2' 
-alias ec2_describe_gpu='aws ec2 describe-instance-status --instance-ids i-0287a5934a75889e2'
-alias ec2_stop_gpu='aws ec2 stop-instances --instance-ids i-0287a5934a75889e2'
 alias ec2_reboot_cpu='aws ec2 reboot-instances --instance-ids i-0abc89187f1e2e2aa'
-alias ec2_reboot_gpu='aws ec2 reboot-instances --instance-ids i-0287a5934a75889e2'
+alias ec2_start_gpu='aws ec2 start-instances --instance-ids i-0829d4329befb77ee' 
+alias ec2_describe_gpu='aws ec2 describe-instance-status --instance-ids i-0829d4329befb77ee'
+alias ec2_stop_gpu='aws ec2 stop-instances --instance-ids i-0829d4329befb77ee'
+alias ec2_reboot_gpu='aws ec2 reboot-instances --instance-ids i-0829d4329befb77ee'
 
 # Docker aliases
 alias dps='docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Size}}\t{{.Ports}}"' 
 alias dcu='docker-compose up'
 alias dcd='docker-compose down'
+alias vscode_docker='ssh -v -NL localhost:23750:/var/run/docker.sock i-0829d4329befb77ee.us-east-2'
+
+# VSCode aliases
+alias docker_port_forward='ssh -vNL localhost:23750:/var/run/docker.sock i-0829d4329befb77ee.us-east-2'
 
 # Kubectl
 source <(kubectl completion zsh)
 
 # Aws IAM Authenticator
 export PATH=$PATH:$HOME/bin
+
+# WSL Specific
+cd
