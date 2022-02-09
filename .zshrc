@@ -133,7 +133,7 @@ export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 # Port forwarding for argos demo. 
 alias demo_argos_http="ssh -NT i-0abc89187f1e2e2aa.us-east-2 -L 8080:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:80 && ssh -NT i-0abc89187f1e2e2aa.us-east-2 -L 9090:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:9090 && ssh -NT i-0abc89187f1e2e2aa.us-east-2 -L 5000:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:5000"
 alias demo_argos_https="ssh -NTv i-0abc89187f1e2e2aa.us-east-2 -L 8443:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:443"
-alias demo_argos_dags="kubectl port-forward svc/argos-airflow-web 8080:8181"
+alias demo_argos_dags="kubectl port-forward svc/argos-airflow-web 8181:8080"
 alias demo_argos_exit="ssh -TO exit i-0abc89187f1e2e2aa.us-east-2"
 
 # AWS command line completion
@@ -149,12 +149,20 @@ alias ssm_my_sessions='aws ssm describe-sessions --state "Active" --filters "key
 alias ec2_start_cpu='aws ec2 start-instances --instance-ids i-0abc89187f1e2e2aa'
 alias ec2_describe_cpu='aws ec2 describe-instance-status --instance-ids i-0abc89187f1e2e2aa'
 alias ec2_stop_cpu='aws ec2 stop-instances --instance-ids i-0abc89187f1e2e2aa'
-alias ec2_start_gpu='aws ec2 start-instances --instance-ids i-0287a5934a75889e2' 
-alias ec2_describe_gpu='aws ec2 describe-instance-status --instance-ids i-0287a5934a75889e2'
-alias ec2_stop_gpu='aws ec2 stop-instances --instance-ids i-0287a5934a75889e2'
 alias ec2_reboot_cpu='aws ec2 reboot-instances --instance-ids i-0abc89187f1e2e2aa'
-alias ec2_reboot_gpu='aws ec2 reboot-instances --instance-ids i-0287a5934a75889e2'
-alias dps='sudo docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Size}}\t{{.Ports}}"' 
+alias ec2_start_gpu='aws ec2 start-instances --instance-ids i-0829d4329befb77ee' 
+alias ec2_describe_gpu='aws ec2 describe-instance-status --instance-ids i-0829d4329befb77ee'
+alias ec2_stop_gpu='aws ec2 stop-instances --instance-ids i-0829d4329befb77ee'
+alias ec2_reboot_gpu='aws ec2 reboot-instances --instance-ids i-0829d4329befb77ee'
+
+# Docker aliases
+alias dps='docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Size}}\t{{.Ports}}"' 
+alias dcu='docker-compose up'
+alias dcd='docker-compose down'
+alias vscode_docker='ssh -v -NL localhost:23750:/var/run/docker.sock i-0829d4329befb77ee.us-east-2'
+
+# VSCode aliases
+alias docker_port_forward='ssh -vNL localhost:23750:/var/run/docker.sock i-0829d4329befb77ee.us-east-2'
 
 # Kubectl
 source <(kubectl completion zsh)
@@ -167,3 +175,9 @@ alias k='kubectl'
 alias airflow_docker='./airflow.sh'
 autoload bashcompinit && bashcompinit
 eval "$(register-python-argcomplete airflow)"
+
+# Aws IAM Authenticator
+export PATH=$PATH:$HOME/bin
+
+# WSL Specific
+cd
