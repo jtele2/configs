@@ -158,3 +158,12 @@ alias dps='sudo docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.S
 
 # Kubectl
 source <(kubectl completion zsh)
+alias kgp='kubectl get pods'
+alias ktop='kubectl top pod'
+alias k='kubectl'
+# alias kubectl="minikube kubectl --"
+
+# Airflow
+alias airflow_docker='./airflow.sh'
+autoload bashcompinit && bashcompinit
+eval "$(register-python-argcomplete airflow)"
