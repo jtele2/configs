@@ -1,3 +1,5 @@
+" From https://gist.github.com/simonista/8703722
+
 " Don't try to be vi compatible
 set nocompatible
 
@@ -32,11 +34,11 @@ set encoding=utf-8
 
 " Whitespace
 set wrap
-set textwidth=79
+set textwidth=88
 set formatoptions=tcqrn1
-set tabstop=2
-set shiftwidth=2
-set softtabstop=2
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
 set expandtab
 set noshiftround
 
