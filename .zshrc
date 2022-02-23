@@ -161,11 +161,13 @@ alias dcu='docker-compose up'
 alias dcd='docker-compose down'
 alias port_forward_vscode='ssh -v -NL localhost:23750:/var/run/docker.sock i-0808afe182a3f57a0.us-east-2'
 
-# Kubectl
-source <(kubectl completion zsh)
+# Kubernetes 
+[[ /usr/bin/kubectl ]] && source <(kubectl completion zsh)
 alias kgp='kubectl get pods'
 alias ktop='kubectl top pod'
 alias k='kubectl'
+complete -F __start_kubectl k
+
 # alias kubectl="minikube kubectl --"
 
 # Airflow
