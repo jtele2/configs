@@ -157,8 +157,6 @@ alias ec2_reboot_gpu='aws ec2 reboot-instances --instance-ids i-0808afe182a3f57a
 
 # Docker aliases
 alias dps='docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Size}}\t{{.Ports}}"' 
-alias dcu='docker-compose up'
-alias dcd='docker-compose down'
 alias port_forward_vscode='ssh -v -NL localhost:23750:/var/run/docker.sock i-0808afe182a3f57a0.us-east-2'
 
 # Kubernetes 
