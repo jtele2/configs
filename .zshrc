@@ -154,6 +154,7 @@ alias ec2_start_gpu='aws ec2 start-instances --instance-ids i-0808afe182a3f57a0'
 alias ec2_describe_gpu='aws ec2 describe-instance-status --instance-ids i-0808afe182a3f57a0'
 alias ec2_stop_gpu='aws ec2 stop-instances --instance-ids i-0808afe182a3f57a0'
 alias ec2_reboot_gpu='aws ec2 reboot-instances --instance-ids i-0808afe182a3f57a0'
+alias ec2_ssh_cpu='ssh -t i-0abc89187f1e2e2aa.us-east-2 bash -c zsh -l'
 
 # Docker aliases
 alias dps='docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Size}}\t{{.Ports}}"' 
