@@ -183,6 +183,6 @@ cd
 # Remove user:host from prompt segment
 prompt_context() {
   if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-#    prompt_segment black default "%(!.%{%F{yellow}%}.)$USER"
+    prompt_segment black default "%(!.%{%F{yellow}%}.)$HOST"
   fi
 }
