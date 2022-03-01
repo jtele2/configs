@@ -76,6 +76,7 @@ plugins=(
     docker
     docker-compose
     vi-mode
+    kubectl
 )
 
 source $ZSH/oh-my-zsh.sh
