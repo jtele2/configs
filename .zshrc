@@ -73,9 +73,10 @@ ZSH_THEME="agnoster"
 plugins=(
     git
     colored-man-pages
-    vi-mode
     docker
     docker-compose
+    vi-mode
+    kubectl
 )
 
 source $ZSH/oh-my-zsh.sh
