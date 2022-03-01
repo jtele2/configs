@@ -73,9 +73,9 @@ ZSH_THEME="agnoster"
 plugins=(
     git
     colored-man-pages
+    vi-mode
     docker
     docker-compose
-    vi-mode
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -156,7 +156,7 @@ complete -F __start_kubectl k
 # alias kubectl="minikube kubectl --"
 
 # Airflow
-alias airflow_docker='./airflow.sh'
+alias airflow_docker='./ctx/airflow.sh'
 autoload bashcompinit && bashcompinit
 eval "$(register-python-argcomplete airflow)"
 
@@ -188,3 +188,4 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+cd argos-airflow
