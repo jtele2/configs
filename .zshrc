@@ -47,7 +47,7 @@ ZSH_THEME="agnoster"
 # You can also set it to another string to have that shown instead of the default red dots.
 # e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
 # Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
-# COMPLETION_WAITING_DOTS="true"
+COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
@@ -77,6 +77,7 @@ plugins=(
     docker-compose
     vi-mode
     kubectl
+    aws
 )
 
 # vi-mode options
@@ -121,17 +122,13 @@ export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 
-# Port forwarding for argos demo. 
-alias demo_argos_http="ssh -NT i-0abc89187f1e2e2aa.us-east-2 -L 8080:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:80 && ssh -NT i-0abc89187f1e2e2aa.us-east-2 -L 9090:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:9090 && ssh -NT i-0abc89187f1e2e2aa.us-east-2 -L 5000:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:5000"
-alias demo_argos_https="ssh -NTv i-0abc89187f1e2e2aa.us-east-2 -L 8443:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:443"
-alias demo_argos_dags="kubectl port-forward svc/argos-airflow-web 8181:8080"
-alias demo_argos_exit="ssh -TO exit i-0abc89187f1e2e2aa.us-east-2"
-
-# AWS command line completion
-export PATH=/usr/local/bin/aws_completer:$PATH
-autoload bashcompinit && bashcompinit
-autoload -Uz compinit && compinit
-complete -C '/usr/local/bin/aws_completer' aws
+# Port forwarding for pathfinder. 
+alias demo_pathfinder_http="ssh -NT i-0abc89187f1e2e2aa.us-east-2 -L 8080:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:80 && ssh -NT i-0abc89187f1e2e2aa.us-east-2 -L 9090:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:9090 && ssh -NT i-0abc89187f1e2e2aa.us-east-2 -L 5000:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:5000"
+alias demo_pathfinder_https="ssh -NTv i-0abc89187f1e2e2aa.us-east-2 -L 8443:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:443"
+# TODO Rename argos-airflow-web to pf
+alias demo_pathfinder_dags="kubectl port-forward svc/argos-airflow-web 8181:8080"
+alias demo_pathfinder_exit="ssh -TO exit i-0abc89187f1e2e2aa.us-east-2"
+alias demo_prometheus="kubectl port-forward service/prometheus-grafana -n prometheus 8282:80"
 
 # AWS SSM aliases
 alias ssm_my_sessions='aws ssm describe-sessions --state "Active" --filters "key=Owner,value=arn:aws:iam::751486495581:user/josiah.caprino"'
@@ -150,15 +147,6 @@ alias ec2_ssh_cpu='ssh -t i-0abc89187f1e2e2aa.us-east-2 bash -c zsh -l'
 # Docker aliases
 alias dps='docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Size}}\t{{.Ports}}"' 
 alias port_forward_vscode='ssh -v -NL localhost:23750:/var/run/docker.sock i-0808afe182a3f57a0.us-east-2'
-
-# Kubernetes 
-[[ /usr/bin/kubectl ]] && source <(kubectl completion zsh)
-alias kgp='kubectl get pods'
-alias ktop='kubectl top pod'
-alias k='kubectl'
-complete -F __start_kubectl k
-
-# alias kubectl="minikube kubectl --"
 
 # Airflow
 alias airflow_docker='./ctx/airflow.sh'
@@ -194,3 +182,8 @@ unset __conda_setup
 # <<< conda initialize <<<
 
 cd argos-airflow
+
+# Elasticsearch
+function es() {
+    curl -k -u elastic:axPYRM3e151UVu24zB1992WA https://localhost:8443/es/"$@";
+}
