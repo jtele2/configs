@@ -71,6 +71,7 @@ COMPLETION_WAITING_DOTS="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
+    minikube
     git
     colored-man-pages
     docker
@@ -78,6 +79,7 @@ plugins=(
     vi-mode
     kubectl
     aws
+    helm
 )
 
 # vi-mode options
@@ -148,6 +150,9 @@ alias ec2_ssh_cpu='ssh -t i-0abc89187f1e2e2aa.us-east-2 bash -c zsh -l'
 alias dps='docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Size}}\t{{.Ports}}"' 
 alias port_forward_vscode='ssh -v -NL localhost:23750:/var/run/docker.sock i-0808afe182a3f57a0.us-east-2'
 
+# TLDR
+alias tldr='docker run --rm -it -v ~/.tldr/:/root/.tldr/ nutellinoit/tldr'
+
 # Airflow
 alias airflow_docker='./ctx/airflow.sh'
 autoload bashcompinit && bashcompinit
@@ -181,9 +186,9 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-cd argos-airflow
-
 # Elasticsearch
 function es() {
     curl -k -u elastic:axPYRM3e151UVu24zB1992WA https://localhost:8443/es/"$@";
 }
+
+cd argos-airflow
