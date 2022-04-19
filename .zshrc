@@ -186,6 +186,9 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+# Set directory colors
+eval `dircolors ~/.dircolors`
+
 # Elasticsearch
 function es() {
     curl -k -u elastic:axPYRM3e151UVu24zB1992WA https://localhost:8443/es/"$@";
