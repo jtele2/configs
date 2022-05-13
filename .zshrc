@@ -154,7 +154,7 @@ alias port_forward_vscode='ssh -v -NL localhost:23750:/var/run/docker.sock i-080
 alias tldr='docker run --rm -it -v ~/.tldr/:/root/.tldr/ nutellinoit/tldr'
 
 # Airflow
-alias airflow_docker='./ctx/airflow.sh'
+alias airflow_docker='./airflow.sh'
 autoload bashcompinit && bashcompinit
 eval "$(register-python-argcomplete airflow)"
 
@@ -194,4 +194,4 @@ function es() {
     curl -k -u elastic:axPYRM3e151UVu24zB1992WA https://localhost:8443/es/"$@";
 }
 
-cd argos-airflow
+cd ~/pathfinder/argos-docker-compose
