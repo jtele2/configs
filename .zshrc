@@ -8,7 +8,7 @@ export ZSH="/home/ubuntu/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="agnoster"
+ZSH_THEME="fino"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -80,6 +80,7 @@ plugins=(
     kubectl
     aws
     helm
+    terraform
 )
 
 # vi-mode options
@@ -154,7 +155,7 @@ alias port_forward_vscode='ssh -v -NL localhost:23750:/var/run/docker.sock i-080
 alias tldr='docker run --rm -it -v ~/.tldr/:/root/.tldr/ nutellinoit/tldr'
 
 # Airflow
-alias airflow_docker='./airflow.sh'
+alias airflow_docker='docker exec -t -i pf-airflow-webserver-1 bash'
 autoload bashcompinit && bashcompinit
 eval "$(register-python-argcomplete airflow)"
 
