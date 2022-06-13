@@ -10,6 +10,9 @@ export ZSH="/home/ubuntu/.oh-my-zsh"
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="fino"
 
+# Custom options
+setopt noflowcontrol
+
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in $ZSH/themes/
@@ -26,7 +29,7 @@ ZSH_THEME="fino"
 # Uncomment one of the following lines to change the auto-update behavior
 # zstyle ':omz:update' mode disabled  # disable automatic updates
 # zstyle ':omz:update' mode auto      # update automatically without asking
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
+zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
 # Uncomment the following line to change how often to auto-update (in days).
 # zstyle ':omz:update' frequency 13
@@ -116,7 +119,6 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias rm='echo "This is not the command you are looking for."; false'
 
-# Git completions downloaded from:
 # https://github.com/git/git/blob/master/contrib/completion/git-completion.zsh
 fpath=(~/.zsh $fpath)
 
@@ -124,14 +126,6 @@ fpath=(~/.zsh $fpath)
 export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
-
-# Port forwarding for pathfinder. 
-alias demo_pathfinder_http="ssh -NT i-0abc89187f1e2e2aa.us-east-2 -L 8080:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:80 && ssh -NT i-0abc89187f1e2e2aa.us-east-2 -L 9090:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:9090 && ssh -NT i-0abc89187f1e2e2aa.us-east-2 -L 5000:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:5000"
-alias demo_pathfinder_https="ssh -NTv i-0abc89187f1e2e2aa.us-east-2 -L 8443:internal-eks-rancher-private-clb-227542248.us-east-2.elb.amazonaws.com:443"
-# TODO Rename argos-airflow-web to pf
-alias demo_pathfinder_dags="kubectl port-forward svc/argos-airflow-web 8181:8080"
-alias demo_pathfinder_exit="ssh -TO exit i-0abc89187f1e2e2aa.us-east-2"
-alias demo_prometheus="kubectl port-forward service/prometheus-grafana -n prometheus 8282:80"
 
 # AWS SSM aliases
 alias ssm_my_sessions='aws ssm describe-sessions --state "Active" --filters "key=Owner,value=arn:aws:iam::751486495581:user/josiah.caprino"'
@@ -155,9 +149,7 @@ alias port_forward_vscode='ssh -v -NL localhost:23750:/var/run/docker.sock i-080
 alias tldr='docker run --rm -it -v ~/.tldr/:/root/.tldr/ nutellinoit/tldr'
 
 # Airflow
-alias airflow_docker='docker exec -t -i pf-airflow-webserver-1 bash'
 autoload bashcompinit && bashcompinit
-eval "$(register-python-argcomplete airflow)"
 
 # Aws IAM Authenticator
 export PATH=$PATH:$HOME/bin
