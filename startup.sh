@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo apt install zsh
+sudo apt install -y zsh trash-cli
 
 # Install oh-my-zsh if not already installed
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
