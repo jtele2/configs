@@ -12,6 +12,7 @@ fi
 ln -sf $HOME/configs/.zshrc $HOME/.zshrc
 ln -sf $HOME/configs/functions.zsh $HOME/.oh-my-zsh/custom/functions.zsh
 ln -sf $HOME/configs/aliases.zsh $HOME/.oh-my-zsh/custom/aliases.zsh
+ln -sf $HOME/configs/.zshrc $HOME/.zshrc
 
 # Setup git
 git config --global user.name "Josiah M. Caprino"
