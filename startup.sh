@@ -15,4 +15,4 @@ ln -sf $HOME/configs/aliases.zsh $HOME/.oh-my-zsh/custom/aliases.zsh
 
 # Setup git
 git config --global user.name "Josiah M. Caprino"
-git config --global user.email josiah.caprino@ecstech.com
+git config --global user.email "josiah.caprino@ecstech.com"
