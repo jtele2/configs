@@ -100,11 +100,11 @@ source $ZSH/oh-my-zsh.sh
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+if [[ -n $SSH_CONNECTION ]]; then
+	export EDITOR='vim'
+else
+	export EDITOR='vim'
+fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -152,5 +152,3 @@ unset __conda_setup
 function es() {
     curl -k -u elastic:axPYRM3e151UVu24zB1992WA https://localhost:8443/es/"$@";
 }
-
-cd ~/pathfinder/argos-airflow
