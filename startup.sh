@@ -1,5 +1,17 @@
 #!/bin/bash
 
+# Install unzip
+if ! command -v unzip &> /dev/null; then
+    sudo apt install zip
+fi
+
+# Install AWS CLI
+if ! command -v aws &> /dev/null; then
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "$HOME/awscliv2.zip"
+    unzip awscliv2.zip
+    sudo ./aws/install
+fi
+
 # Install Terraform
 if ! command -v terraform &> /dev/null; then
     sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
