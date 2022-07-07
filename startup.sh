@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Install Terraform
+if ! command -v terraform &> /dev/null; then
+    sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+    curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+    sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+    sudo apt-get update && sudo apt-get install -y terraform
+fi
+
 # Install zsh and trash-cli
 if ! command -v zsh &> /dev/null; then
     sudo apt install -y zsh
