@@ -1,3 +1,7 @@
+# Custom
+get-docker.sh
+test.sh
+
 # Auto-made files
 **/.ipynb_checkpoints
 **/__pycache__
