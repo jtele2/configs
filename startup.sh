@@ -1,8 +1,13 @@
 #!/bin/bash
 
+# Install jq
+if ! command -v jq &> /dev/null; then
+    sudo apt install -y jq
+fi
+
 # Install unzip
 if ! command -v unzip &> /dev/null; then
-    sudo apt install zip
+    sudo apt install -y zip
 fi
 
 # Install AWS CLI
