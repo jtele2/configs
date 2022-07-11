@@ -79,16 +79,11 @@ plugins=(
     colored-man-pages
     docker
     docker-compose
-    vi-mode
     kubectl
     aws
     helm
     terraform
 )
-
-# vi-mode options
-VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
-VI_MODE_SET_CURSOR=true
 
 source $ZSH/oh-my-zsh.sh
 
@@ -125,6 +120,9 @@ export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 
 # Aws IAM Authenticator
 export PATH=$PATH:$HOME/bin
+
+# Ansible
+export PATH=$PATH:$HOME/.local/bin
 
 # Remove user:host from prompt segment
 prompt_context() {
