@@ -36,15 +36,14 @@ fi
 # Install docker
 if ! command -v docker &> /dev/null; then
 	curl -fsSL https://get.docker.com -o get-docker.sh
-	sudo sh get-docker.sh
+	sudo sh get-docker.sh >/dev/null
     sudo usermod -aG docker $USER
     newgrp docker
 fi
 
 # Install oh-my-zsh if not already installed
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
-    # Control will enter here if $DIRECTORY exists.
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 fi
 
 # Softlink the required files

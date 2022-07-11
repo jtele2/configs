@@ -1,3 +1,12 @@
+# Filebeat logs
+,flogs() {
+    journalctl --output="cat" --output-fields="MESSAGE" -n 10 --no-pager _SYSTEMD_UNIT=filebeat.service
+}
+
+,alogs() {
+    journalctl --output="cat" --output-fields="MESSAGE" -n 10 --no-pager _SYSTEMD_UNIT=auditbeat.service
+}
+
 # docker exec airflow (pf)
 deas() {
     docker exec -ti server-airflow-webserver-1 bash -c "$*"
