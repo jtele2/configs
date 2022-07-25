@@ -7,6 +7,7 @@
     journalctl --output="cat" --output-fields="MESSAGE" -n 10 --no-pager _SYSTEMD_UNIT=auditbeat.service
 }
 
+# DOCKER
 # docker exec airflow (pf)
 deas() {
     docker exec -ti server-airflow-webserver-1 bash -c "$*"
