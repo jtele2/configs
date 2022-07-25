@@ -9,11 +9,16 @@
 
 # DOCKER
 # docker exec airflow (pf)
-deas() {
+,deas() {
     docker exec -ti server-airflow-webserver-1 bash -c "$*"
 }
 
 # docker exec airflow (client)
-deac() {
+,deac() {
     docker exec -ti client-airflow-webserver-1 bash -c "$*"
+}
+
+# Elasticsearch
+,es() {
+    curl -k -u elastic:axPYRM3e151UVu24zB1992WA https://localhost:8443/es/"$@";
 }
