@@ -1,0 +1,46 @@
+- name: Setup EC2 dev instances for CMMC Compliance
+  # Tychon tester node on us-east-2
+  hosts: localhost
+  tasks:
+    - name: Install apt packages
+      ansible.builtin.apt:
+        pkg:
+        - jq
+        - zsh
+        - trash-cli
+        - gnupg
+        - software-properties-common
+        state: present
+        update_cache: yes
+      become: yes
+    - name: Download the AWS CLI
+      ansible.builtin.unarchive:
+        src: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: /tmp
+        remote_src: yes
+    - name: Install the AWS CLI
+      ansible.builtin.shell: /tmp/aws/install
+      become: yes
+    - name: Add Terraform Apt key
+      ansible.builtin.apt_key:
+        url: https://apt.releases.hashicorp.com/gpg
+        state: present
+      become: yes
+    - name: Add Terraform repository (ubuntu)
+      ansible.builtin.apt_repository:
+        repo: deb [arch=amd64] http://archive.canonical.com/ubuntu focal main
+        state: present
+    - name: Install Terraform
+      ansible.builtin.apt:
+        name: terraform
+        state: present
+        update_cache: yes
+      become: yes
+    - name: Download ohmyzsh
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+        dest: /tmp/ohmyzsh_install.sh
+        mode: '0644'
+    - name: Install ohmyzsh
+      ansible.builtin.shell: /tmp/ohmyzsh_install --unattended
+      become: yes
