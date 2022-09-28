@@ -13,34 +13,47 @@
         state: present
         update_cache: yes
       become: yes
+    - name: Check if AWS CLI installed
+      ansible.builtin.shell: aws --version
+      register: aws_installed
+      ignore_errors: yes
     - name: Download the AWS CLI
       ansible.builtin.unarchive:
         src: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
         dest: /tmp
         remote_src: yes
+      when: aws_installed.rc != 0
     - name: Install the AWS CLI
       ansible.builtin.shell: /tmp/aws/install
+      when: aws_installed.rc != 0
       become: yes
-    - name: Add Terraform Apt key
-      ansible.builtin.apt_key:
-        url: https://apt.releases.hashicorp.com/gpg
-        state: present
-      become: yes
-    - name: Add Terraform repository (ubuntu)
-      ansible.builtin.apt_repository:
-        repo: deb [arch=amd64] http://archive.canonical.com/ubuntu focal main
-        state: present
-    - name: Install Terraform
-      ansible.builtin.apt:
-        name: terraform
-        state: present
-        update_cache: yes
-      become: yes
+    # - name: Add Terraform Apt key
+    #   ansible.builtin.apt_key:
+    #     url: https://apt.releases.hashicorp.com/gpg
+    #     state: present
+    #   become: yes
+    # - name: Add Terraform repository (ubuntu)
+    #   ansible.builtin.apt_repository:
+    #     repo: deb http://archive.canonical.com/ubuntu focal main
+    #     state: present
+    #   become: yes
+    # - name: Install Terraform
+    #   ansible.builtin.apt:
+    #     name: terraform
+    #     state: present
+    #     update_cache: yes
+    #   become: yes
     - name: Download ohmyzsh
       ansible.builtin.get_url:
         url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-        dest: /tmp/ohmyzsh_install.sh
-        mode: '0644'
+        dest: /home/ubuntu/ohmyzsh_install.sh
+        mode: '0645'
     - name: Install ohmyzsh
-      ansible.builtin.shell: /tmp/ohmyzsh_install --unattended
-      become: yes
+      ansible.builtin.command: /bin/bash /home/ubuntu/ohmyzsh_install.sh --unattended
+    - name: Create a symbolic link
+      ansible.builtin.file:
+        src: /home/ubuntu/configs/.zshrc
+        dest: /home/ubuntu/.zshrc
+        owner: ubuntu
+        group: ubuntu
+        state: link
