@@ -76,7 +76,7 @@ plugins=(
     colored-man-pages
     docker
     docker-compose
-    # kubectl
+    kubectl
     aws
     helm
     terraform
