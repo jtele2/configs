@@ -10,9 +10,16 @@
         - trash-cli
         - gnupg
         - software-properties-common
+        - apt-transport-https
+        - ca-certificates
+        - curl 
+        - gnupg  
+        - lsb-release 
         state: present
         update_cache: yes
       become: yes
+      tags: 
+      - test
     - name: Check if AWS CLI installed
       ansible.builtin.shell: aws --version
       register: aws_installed
@@ -43,17 +50,50 @@
     #     state: present
     #     update_cache: yes
     #   become: yes
-    - name: Download ohmyzsh
-      ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-        dest: /home/ubuntu/ohmyzsh_install.sh
-        mode: '0645'
-    - name: Install ohmyzsh
-      ansible.builtin.command: /bin/bash /home/ubuntu/ohmyzsh_install.sh --unattended
-    - name: Create a symbolic link
+    # - name: Download ohmyzsh
+    #   ansible.builtin.get_url:
+    #     url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+    #     dest: /home/ubuntu/ohmyzsh_install.sh
+    #     mode: '0645'
+    # - name: Install ohmyzsh
+    #   ansible.builtin.command: /bin/bash /home/ubuntu/ohmyzsh_install.sh --unattended
+    - name: Create a symbolic link for .zshrc
       ansible.builtin.file:
         src: /home/ubuntu/configs/.zshrc
         dest: /home/ubuntu/.zshrc
         owner: ubuntu
         group: ubuntu
         state: link
+        force: yes
+      tags: 
+      - zsh-post-install
+    - name: Create a symbolic link for functions.zsh
+      ansible.builtin.file:
+        src: /home/ubuntu/configs/functions.zsh
+        dest: /home/ubuntu/.oh-my-zsh/custom/functions.zsh
+        owner: ubuntu
+        group: ubuntu
+        state: link
+        force: yes
+      tags: 
+      - zsh-post-install
+    - name: Create a symbolic link for aliases.zsh
+      ansible.builtin.file:
+        src: /home/ubuntu/configs/aliases.zsh
+        dest: /home/ubuntu/.oh-my-zsh/custom/aliases.zsh
+        owner: ubuntu
+        group: ubuntu
+        state: link
+        force: yes
+      tags: 
+      - zsh-post-install
+    - name: Create a symbolic link for aliases.zsh
+      ansible.builtin.file:
+        src: /home/ubuntu/configs/.vimrc
+        dest: /home/ubuntu/.vimrc
+        owner: ubuntu
+        group: ubuntu
+        state: link
+        force: yes
+      tags: 
+      - zsh-post-install
