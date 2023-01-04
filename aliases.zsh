@@ -1,6 +1,5 @@
 # General
 alias rm='echo "This is not the command you are looking for."; false'
-alias ls='ls -Fahl --color'
 
 # AWS
 alias ssm_my_sessions='aws ssm describe-sessions --state "Active" --filters "key=Owner,value=arn:aws:iam::751486495581:user/josiah.caprino"'
