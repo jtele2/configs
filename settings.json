@@ -1,9 +1,0 @@
-{
-    "workbench.colorTheme": "Default Dark+",
-    "workbench.startupEditor": "none",
-    "remote.SSH.remotePlatform": {
-        "dev": "linux"
-    },
-    "window.zoomLevel": 1.5,
-    "aws.telemetry": false
-}

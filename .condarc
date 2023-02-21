@@ -1,3 +1,0 @@
-ssl_verify: /etc/ssl/certs/ca-certificates.crt
-env_prompt: '({default_env}) '
-changeps1: false

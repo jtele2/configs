@@ -1,3 +1,5 @@
+# My custom functions all start with `,`
+
 # Filebeat logs
 ,flogs() {
     journalctl --output="cat" --output-fields="MESSAGE" -n 10 --no-pager _SYSTEMD_UNIT=filebeat.service
@@ -16,9 +18,4 @@
 # docker exec airflow (client)
 ,deac() {
     docker exec -ti client-airflow-webserver-1 bash -c "$*"
-}
-
-# Elasticsearch
-,es() {
-    curl -k -u elastic:axPYRM3e151UVu24zB1992WA https://localhost:8443/es/"$@";
 }

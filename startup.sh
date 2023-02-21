@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# TODO: Finish this file
+
 # Install jq
 if ! command -v jq &> /dev/null; then
     sudo apt install -y jq
