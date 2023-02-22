@@ -5,7 +5,7 @@ path=('/home/ubuntu/istio-1.17.0/bin' $path)
 
 # Source my pyenv
 export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"
 
 export PATH
