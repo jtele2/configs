@@ -84,9 +84,6 @@ plugins=(
     istioctl
 )
 
-# Source extra completions that don't have plugins installed yet
-# fpath=(~/.zsh/completions $fpath)
-
 # Keep this line here - its order matters
 source $ZSH/oh-my-zsh.sh
 

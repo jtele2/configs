@@ -1,5 +1,13 @@
 # Joe Caprino's Configs
 
+These configs work for zsh with oh-my-zsh. Everything needs a simlink.
+
+The `.zshenv` loads the completions outside of zsh plugins.
+
+`fpath` is for completion loading, `path` is for PATH. 
+
+## Installation
+
 Install zsh and oh-my-zsh prior to using these configs. Symlink the following:  
 
 ```bash
