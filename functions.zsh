@@ -1,5 +1,11 @@
 # My custom functions all start with `,`
 
+,tfp() {
+    terraform plan -out tf.plan
+    terraform show  tf.plan > tfplan.ansi
+    less -R tfplan.ansi
+}
+
 # Filebeat logs
 ,flogs() {
     journalctl --output="cat" --output-fields="MESSAGE" -n 10 --no-pager _SYSTEMD_UNIT=filebeat.service
