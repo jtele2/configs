@@ -3,7 +3,7 @@
 ,tfp() {
     terraform plan -out tf.plan
     terraform show  tf.plan > tfplan.ansi
-    less -R tfplan.ansi
+    less -RN tfplan.ansi
 }
 
 # Filebeat logs
