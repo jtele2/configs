@@ -11,7 +11,7 @@ fix_github_copilot() {
         _EXTENSIONFILEPATH="${_EXTENSIONSPATH}/${_COPILOTDIR}/dist/extension.js"
 
         if [[ -f "$_EXTENSIONFILEPATH" ]]; then
-            echo "Found $_NAME extension, applying 'rejectUnauthorized' patches to '$_EXTENSIONFILEPATH'"
+            # echo "Found $_NAME extension, applying 'rejectUnauthorized' patches to '$_EXTENSIONFILEPATH'"
             perl -pi -e 's/,rejectUnauthorized:[a-z]}(?!})/,rejectUnauthorized:false}/g' ${_EXTENSIONFILEPATH}
             sed -i.bak 's/d={...l,/d={...l,rejectUnauthorized:false,/g' ${_EXTENSIONFILEPATH}
         fi
