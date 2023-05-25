@@ -1,7 +1,13 @@
 # https://unix.stackexchange.com/questions/71253/what-should-shouldnt-go-in-zshenv-zshrc-zlogin-zprofile-zlogout?newreg=741ab675789d4b1ba96862d40c2bb2d7
 
-# Add completions (not available as plugins) in completions folder to path 
-fpath=("/home/ubuntu/configs/completions" $fpath)
+# fpath is the zsh search path only for function definitions and autoloaded functions
+fpath=(~/configs/completions $fpath)
+
+# path is the zsh equivalent of PATH
+path=(
+    /usr/local/cuda-12.1/bin 
+    $path
+)
 
 # Add path
 export PYENV_ROOT="$HOME/.pyenv"

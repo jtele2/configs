@@ -114,3 +114,10 @@ fi
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+# Created by `pipx` on 2023-05-18 19:18:35
+export PATH="$PATH:/home/ubuntu/.local/bin"
+
+# So that GitHub CoPilot Chat works
+# https://gist.github.com/sarimarton/55779cf95028860ea2126e61a6b377d0
+fix_github_copilot
