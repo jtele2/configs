@@ -121,3 +121,8 @@ export PATH="$PATH:/home/ubuntu/.local/bin"
 # So that GitHub CoPilot Chat works
 # https://gist.github.com/sarimarton/55779cf95028860ea2126e61a6b377d0
 fix_github_copilot
+
+# Set the REQUESTS_CA_BUNDLE if on WSL
+if [ -n "$WSL_DISTRO_NAME" ]; then
+    export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+fi
