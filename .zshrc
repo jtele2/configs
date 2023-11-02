@@ -72,6 +72,7 @@ zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(    
     helm
+    ssh-agent
     fzf
     git
     colored-man-pages
@@ -86,6 +87,9 @@ plugins=(
     istioctl
     golang
 )
+
+# Add ssh-keys with non-default name to ssh-agent
+zstyle :omz:plugins:ssh-agent identities id_rsa_ecs_github
 
 # Keep this line here - its order matters
 source $ZSH/oh-my-zsh.sh
@@ -127,3 +131,6 @@ fix_github_copilot
 if [ -n "$WSL_DISTRO_NAME" ]; then
     export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 fi
+
+alias less="less -i"
+alias kgpw='watch -n 0.5 kubectl get po'
