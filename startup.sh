@@ -31,7 +31,7 @@ setup_aws() {
     echo "SETTING UP AWS..."
     if ! command -v aws &> /dev/null; then
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/home/ubuntu/awscliv2.zip"
-        unzip $DIR/awscliv2.zip
+        unzip -qq $DIR/awscliv2.zip
         sudo ./aws/install
         rm -rf aws
     fi
@@ -92,7 +92,7 @@ setup_zsh () {
 setup_dotfiles () {
 
     echo "SETTING UP DOTFILES..."
-    if [ ! -d "$DIR/.oh-my-zsh" ]; then
+    if [ ! -d "$DIR/configs" ]; then
         git clone https://github.com/jtele2/configs.git $DIR/configs
     else
         echo "configs dir already exists"
@@ -102,7 +102,8 @@ setup_dotfiles () {
     ln -sf $DIR/configs/functions.zsh $DIR/.oh-my-zsh/custom/functions.zsh
     ln -sf $DIR/configs/aliases.zsh $DIR/.oh-my-zsh/custom/aliases.zsh
     cp -asf $DIR/configs/completions $DIR/.zsh
-    chown -R ubuntu:ubuntu $DIR/configs $DIR/.vimrc $DIR/.zshrc $DIR/.oh-my-zsh/custom/functions.zsh /home/ubuntu/.oh-my-zsh/custom/aliases.zsh /home/ubuntu/.zsh
+    chown -R ubuntu:ubuntu $DIR
+    # chown -R ubuntu:ubuntu $DIR/configs $DIR/.vimrc $DIR/.zshrc $DIR/.oh-my-zsh/custom/functions.zsh $DIR/.oh-my-zsh/custom/aliases.zsh $DIR/.zsh
 
 }
 

@@ -5,6 +5,7 @@
 configs.code-workspace
 terraform.tfstate
 terraform.tfstate.backup
+venv/*
 
 # Auto-made files
 **/.ipynb_checkpoints
