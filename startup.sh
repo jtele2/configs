@@ -92,7 +92,11 @@ setup_zsh () {
 setup_dotfiles () {
 
     echo "SETTING UP DOTFILES..."
-    git clone https://github.com/jtele2/configs.git $DIR/configs
+    if [ ! -d "$DIR/.oh-my-zsh" ]; then
+        git clone https://github.com/jtele2/configs.git $DIR/configs
+    else
+        echo "configs dir already exists"
+    fi
     ln -sf $DIR/configs/.vimrc $DIR/.vimrc
     ln -sf $DIR/configs/.zshrc $DIR/.zshrc
     ln -sf $DIR/configs/functions.zsh $DIR/.oh-my-zsh/custom/functions.zsh
