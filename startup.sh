@@ -70,16 +70,14 @@ setup_trashcli() {
 setup_zsh () {
 
     echo "SETTING UP ZSH..."
-    local DIR=/home/ubuntu
     apt-get update && apt-get install -y zsh wget # Install zsh and wget
     # Install oh-my-zsh
-    wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O $DIR/install.sh
-    chown -R ubuntu:ubuntu $DIR/install.sh
-    cd $DIR
+    wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O $HOME/install.sh
+    chown -R ubuntu:ubuntu $HOME/install.sh
+    cd $HOME
     echo pwd
     runuser -l ubuntu -c 'sh install.sh'
     # Change the default shell to zsh
-    yum -y install util-linux-user
     chsh -s /usr/bin/zsh ubuntu
     rm -rf install.sh
 
