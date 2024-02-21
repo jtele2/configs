@@ -1,4 +1,10 @@
 # Custom
+.DS_Store
+.terraform.lock.hcl
+.terraform/
+configs.code-workspace
+terraform.tfstate
+terraform.tfstate.backup
 
 # Auto-made files
 **/.ipynb_checkpoints
