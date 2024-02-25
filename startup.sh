@@ -9,7 +9,7 @@ setup_jq() {
 
   echo "=================SETTING UP JQ================="
   if ! command -v jq &> /dev/null; then
-      sudo apt install -y -qq jq
+      apt install -y -qq jq
   else
       echo "jq already installed"
   fi
@@ -21,7 +21,7 @@ setup_unzip() {
 
     echo "=================SETTING UP UNZIP================="
     if ! command -v unzip &> /dev/null; then
-        sudo apt install -y -qq zip
+        apt install -y -qq zip
     fi
 
 }
@@ -33,7 +33,7 @@ setup_aws() {
     if ! command -v aws &> /dev/null; then
         curl -sS "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/home/ubuntu/awscliv2.zip"
         unzip -qq $DIR/awscliv2.zip
-        sudo ./aws/install
+        ./aws/install
         rm -rf aws
     fi
 
@@ -54,7 +54,7 @@ setup_fzf() {
 }
 
 
-setup_zsh () {
+setup_zsh() {
 
     echo "=================SETTING UP ZSH================="
     apt-get install -y -qq zsh wget
@@ -79,13 +79,13 @@ setup_trashcli() {
     
     echo "=================SETTING UP TRASH-CLI================="
     if ! command -v trash-put &> /dev/null; then
-        sudo apt install -y -qq trash-cli
+        apt install -y -qq trash-cli
     fi
     
 }
 
 
-setup_dotfiles () {
+setup_dotfiles() {
 
     echo "=================SETTING UP DOTFILES================="
     if [ ! -d "$DIR/configs" ]; then
@@ -103,7 +103,7 @@ setup_dotfiles () {
 
 }
 
-setup_acg_practic_repo () {
+setup_acg_practic_repo() {
 
     echo "=================SETTING UP ACG PRACTICE REPO================="
     if [ ! -d "$DIR/acg" ]; then
@@ -115,18 +115,17 @@ setup_acg_practic_repo () {
 
 }
 
-setup_packages () {
+setup_packages() {
 
     echo "=================SETTING UP PACKAGES================="
-    apt-get install -y -qq python3-pip
+    apt-get install -y -qq python3-pip python3-venv
     pip3 install -U pip setuptools
     pip3 install boto3 black isort requests
-    chown -R ubuntu:ubuntu $DIR/acg
 
 }
 
 
-sudo apt-get update -qq
+apt-get update -qq
 
 # Check if a function name is passed as an argument
 if declare -f "$1" > /dev/null
@@ -143,4 +142,5 @@ else
     setup_trashcli
     setup_dotfiles
     setup_acg_practic_repo
+    setup_packages
 fi
