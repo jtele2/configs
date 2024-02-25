@@ -14,7 +14,7 @@ provider "aws" {
 }
 
 # Upload pub key to AWS, allowing me to use the same key for SSH conns
-resource "aws_key_pair" "test_server_key" {
+resource "aws_key_pair" "practice_server_key" {
   key_name   = "TestServerKey"
   public_key = file("~/.ssh/id_rsa.pub")
 }
@@ -46,18 +46,57 @@ resource "aws_security_group" "allow_all_from_my_ip" {
     Name = "AllowAllFromMyIP"
   }
 }
-resource "aws_instance" "test_server_4" {
+
+resource "aws_instance" "practice_server_1" {
   ami                    = "ami-0de8a7e805b017a1f" # Ubuntu 22.04
   instance_type          = "t3.medium"             # Max allowable
-  key_name               = aws_key_pair.test_server_key.key_name
+  key_name               = aws_key_pair.practice_server_key.key_name
   vpc_security_group_ids = [aws_security_group.allow_all_from_my_ip.id]
   user_data              = file("${path.module}/startup.sh")
+  iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
 
   root_block_device {
     volume_size = "50"
   }
 
   tags = {
-    Name = "TestServer"
+    Name = "practiceServer"
   }
+}
+
+# Create IAM Role for the instance
+resource "aws_iam_role" "ec2_role" {
+  name = "ec2Role"
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression result to valid JSON syntax.
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      },
+    ]
+  })
+}
+
+# Attach the pre-made ACG policies to the Role
+resource "aws_iam_role_policy_attachment" "ec2_policy_attach_allow_all" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = "arn:aws:iam::440679360547:policy/allow_all"
+}
+resource "aws_iam_role_policy_attachment" "ec2_policy_attach_playground" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = "arn:aws:iam::440679360547:policy/Playground_AWS_Sandbox"
+}
+
+# Create Instance Profile
+resource "aws_iam_instance_profile" "ec2_profile" {
+  name = "ec2Profile"
+  role = aws_iam_role.ec2_role.name
 }

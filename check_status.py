@@ -1,3 +1,8 @@
+"""
+TODO: 
+  - Update the check with the boto3 waiters
+"""
+
 import boto3
 import time
 import os

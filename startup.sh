@@ -4,11 +4,12 @@ set -e -x
 
 DIR=/home/ubuntu
 
+
 setup_jq() {
 
-  echo "SETTING UP JQ..."
+  echo "=================SETTING UP JQ================="
   if ! command -v jq &> /dev/null; then
-      sudo apt install -y jq
+      sudo apt install -y -qq jq
   else
       echo "jq already installed"
   fi
@@ -18,9 +19,9 @@ setup_jq() {
 
 setup_unzip() {
 
-    echo "SETTING UP UNZIP..."
+    echo "=================SETTING UP UNZIP================="
     if ! command -v unzip &> /dev/null; then
-        sudo apt install -y zip
+        sudo apt install -y -qq zip
     fi
 
 }
@@ -28,9 +29,9 @@ setup_unzip() {
 
 setup_aws() {
 
-    echo "SETTING UP AWS..."
+    echo "=================SETTING UP AWS================="
     if ! command -v aws &> /dev/null; then
-        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/home/ubuntu/awscliv2.zip"
+        curl -sS "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/home/ubuntu/awscliv2.zip"
         unzip -qq $DIR/awscliv2.zip
         sudo ./aws/install
         rm -rf aws
@@ -41,12 +42,8 @@ setup_aws() {
 
 setup_fzf() {
 
-    echo "SETTING UP FZF..."
-    # Update package lists
-    apt-get update
-    # Install fzf
-    apt-get install -y fzf
-    # Verify installation
+    echo "=================SETTING UP FZF================="
+    apt-get install -y -qq fzf
     if command -v fzf >/dev/null 2>&1; then
         echo "fzf successfully installed"
     else
@@ -57,24 +54,12 @@ setup_fzf() {
 }
 
 
-setup_trashcli() {
-    
-    echo "SETTING UP TRASH-CLI..."
-    if ! command -v zsh &> /dev/null; then
-        sudo apt install -y zsh
-    fi
-    if ! command -v trash-put &> /dev/null; then
-        sudo apt install -y trash-cli
-    fi
-    
-}
-
 setup_zsh () {
 
-    echo "SETTING UP ZSH..."
-    apt-get update && apt-get install -y zsh wget # Install zsh and wget
+    echo "=================SETTING UP ZSH================="
+    apt-get install -y -qq zsh wget
     # Install oh-my-zsh
-    wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O $DIR/install.sh
+    wget -q https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O $DIR/install.sh
     chown -R ubuntu:ubuntu $DIR/install.sh
     cd $DIR
     echo pwd
@@ -89,9 +74,20 @@ setup_zsh () {
 
 }
 
+
+setup_trashcli() {
+    
+    echo "=================SETTING UP TRASH-CLI================="
+    if ! command -v trash-put &> /dev/null; then
+        sudo apt install -y -qq trash-cli
+    fi
+    
+}
+
+
 setup_dotfiles () {
 
-    echo "SETTING UP DOTFILES..."
+    echo "=================SETTING UP DOTFILES================="
     if [ ! -d "$DIR/configs" ]; then
         git clone https://github.com/jtele2/configs.git $DIR/configs
     else
@@ -107,6 +103,31 @@ setup_dotfiles () {
 
 }
 
+setup_acg_practic_repo () {
+
+    echo "=================SETTING UP ACG PRACTICE REPO================="
+    if [ ! -d "$DIR/acg" ]; then
+        git clone https://github.com/jtele2/acg-practice.git $DIR/acg
+    else
+        echo "acg dir already exists"
+    fi
+    chown -R ubuntu:ubuntu $DIR/acg
+
+}
+
+setup_packages () {
+
+    echo "=================SETTING UP PACKAGES================="
+    apt-get install -y -qq python3-pip
+    pip3 install -U pip setuptools
+    pip3 install boto3 black isort requests
+    chown -R ubuntu:ubuntu $DIR/acg
+
+}
+
+
+sudo apt-get update -qq
+
 # Check if a function name is passed as an argument
 if declare -f "$1" > /dev/null
 then
@@ -118,7 +139,8 @@ else
     setup_unzip
     setup_aws
     setup_fzf
-    setup_trashcli
     setup_zsh
+    setup_trashcli
     setup_dotfiles
+    setup_acg_practic_repo
 fi
