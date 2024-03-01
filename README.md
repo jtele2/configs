@@ -26,3 +26,9 @@ Install zsh and oh-my-zsh prior to using these configs. Symlink the following:
 ```bash
 # TODO
 ```
+
+## A Cloud Guru (ACG) Classes
+  - A lot of this works for ACG classes. To launch my default instance, apply the terraform file. 
+  - By default, it will launch an EC2 instance you can use for dev purposes. 
+    - For updates to the pip packages available through `user data`, add them to the `startup.sh` 
+      file in the `setup_packages()` function. 

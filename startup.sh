@@ -120,7 +120,7 @@ setup_packages() {
     echo "=================SETTING UP PACKAGES================="
     apt-get install -y -qq python3-pip python3-venv
     pip3 install -U pip setuptools
-    pip3 install boto3 black isort requests
+    pip3 install boto3 black isort requests tqdm
 
 }
 

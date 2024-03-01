@@ -111,62 +111,8 @@ resource "aws_iam_instance_profile" "ec2_profile" {
   role = aws_iam_role.ec2_role.name
 }
 
-
-# =====================================================================================
-# Kinesis Lab
-# =====================================================================================
-# Data source to fetch the Firehose stream details
-data "aws_kinesis_firehose_delivery_stream" "stream_j7irn" {
-  name = "put-s3-j7irn"
+# Modules
+module "kinesis_module" {
+  source = "./modules"
+  # Pass any necessary variables
 }
-
-# IAM policy granting access to the Firehose stream
-resource "aws_iam_policy" "lambda_firehose_policy" {
-  name        = "LambdaFirehosePutRecordPolicy"
-  description = "IAM policy for allowing Lambda to put records to Firehose"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action   = "firehose:PutRecord"
-        Resource = data.aws_kinesis_firehose_delivery_stream.stream_j7irn.arn
-        Effect   = "Allow"
-      },
-      {
-        Action   = "logs:*"
-        Resource = "*"
-        Effect   = "Allow",
-      }
-    ]
-  })
-}
-
-# IAM role for the Lambda function
-resource "aws_iam_role" "lambda_execution_role" {
-  name = "lambdaRole"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Principal = {
-          Service = "lambda.amazonaws.com"
-        }
-        Effect = "Allow"
-        Sid    = ""
-      }
-    ]
-  })
-}
-
-# Attach the policy to the role
-resource "aws_iam_role_policy_attachment" "lambda_firehose_policy_attach" {
-  role       = aws_iam_role.lambda_execution_role.name
-  policy_arn = aws_iam_policy.lambda_firehose_policy.arn
-}
-
-# =====================================================================================
-# Kinesis Lab (End)
-# =====================================================================================
