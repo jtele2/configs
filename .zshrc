@@ -131,3 +131,8 @@ fi
 
 alias less="less -i"
 alias kgpw='watch -n 0.5 kubectl get po'
+
+# Created by `pipx` on 2024-03-14 06:35:35
+if [ "$HOME" = "/home/ubuntu" ]; then
+    export PATH="$PATH:/home/ubuntu/.local/bin"
+fi
