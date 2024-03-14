@@ -5,10 +5,13 @@ TODO:
   - Update the check with the boto3 waiters
 """
 
-import boto3
-import time
+# Standard Library
 import os
 import sys
+import time
+
+# Third Party
+import boto3
 
 
 def is_venv():
@@ -24,7 +27,7 @@ def update_ssh_config(new_ip):
 
     found_host = False
     for i, line in enumerate(lines):
-        if line.strip() == "Host TestServer1":
+        if line.strip() == "Host AcgPractice":
             found_host = True
         if found_host and line.strip().startswith("HostName"):
             lines[i] = f"    HostName {new_ip}\n"
@@ -32,7 +35,7 @@ def update_ssh_config(new_ip):
 
     with open(ssh_config_path, "w") as file:
         file.writelines(lines)
-    print("SSH config updated with new IP:", new_ip)
+    print("SSH config for AcgPractice updated with new IP:", new_ip)
 
 
 def check_instance_status_and_update_ssh():
