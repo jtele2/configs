@@ -65,6 +65,11 @@ zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
+# Pyenv must be loaded before plugins
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"
+
 # Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
@@ -136,3 +141,5 @@ alias kgpw='watch -n 0.5 kubectl get po'
 if [ "$HOME" = "/home/ubuntu" ]; then
     export PATH="$PATH:/home/ubuntu/.local/bin"
 fi
+
+export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
