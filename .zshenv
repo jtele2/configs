@@ -4,15 +4,9 @@
 fpath=(~/configs/completions $fpath)
 
 # path is the zsh equivalent of PATH
-path=(
-    /usr/local/cuda-12.1/bin 
-    $path
-)
+path=(/usr/local/cuda-12.1/bin $path)
 
 # Add path
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init --path)"
-
-# Brew
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
