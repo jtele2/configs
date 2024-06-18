@@ -71,6 +71,7 @@ zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(    
+    kube-ps1
     helm
     ssh-agent
     fzf
@@ -134,3 +135,6 @@ fi
 
 alias less="less -i"
 alias kgpw='watch -n 0.5 kubectl get po'
+
+# TEMP
+export AIRFLOW_HOME=~/sgc-app/airflow
