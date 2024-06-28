@@ -71,22 +71,22 @@ zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(    
-    kube-ps1
-    helm
+    # kube-ps1
+    # helm
     ssh-agent
     fzf
     git
     colored-man-pages
     docker
     docker-compose
-    kubectl
+    # kubectl
     aws
-    helm
-    terraform
-    fluxcd
+    # helm
+    # terraform
+    # fluxcd
     pyenv
-    istioctl
-    golang
+    # istioctl
+    # golang
 )
 
 # Add ssh-keys with non-default name to ssh-agent
@@ -126,7 +126,7 @@ export PATH="$PATH:/home/ubuntu/.local/bin"
 
 # So that GitHub CoPilot Chat works
 # https://gist.github.com/sarimarton/55779cf95028860ea2126e61a6b377d0
-fix_github_copilot
+# fix_github_copilot
 
 # Set the REQUESTS_CA_BUNDLE if on WSL
 if [ -n "$WSL_DISTRO_NAME" ]; then
@@ -135,6 +135,3 @@ fi
 
 alias less="less -i"
 alias kgpw='watch -n 0.5 kubectl get po'
-
-# TEMP
-export AIRFLOW_HOME=~/sgc-app/airflow
