@@ -1,3 +1,8 @@
+# pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"
+
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:/usr/local/go/bin:$PATH
 
@@ -73,6 +78,7 @@ zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 plugins=(    
     # kube-ps1
     # helm
+    # virtualenv
     ssh-agent
     fzf
     git
@@ -120,9 +126,6 @@ fi
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-
-# Created by `pipx` on 2023-05-18 19:18:35
-export PATH="$PATH:/home/ubuntu/.local/bin"
 
 # So that GitHub CoPilot Chat works
 # https://gist.github.com/sarimarton/55779cf95028860ea2126e61a6b377d0
