@@ -1,7 +1,7 @@
-# pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init --path)"
+
+
+# Allow vs code remote more memory
+export NODE_OPTIONS="--max-old-space-size=8192"
 
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:/usr/local/go/bin:$PATH
@@ -14,6 +14,11 @@ export ZSH=$HOME/.oh-my-zsh
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="fino"
+
+# pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -30,8 +35,8 @@ ZSH_THEME="fino"
 
 # Uncomment one of the following lines to change the auto-update behavior
 # zstyle ':omz:update' mode disabled  # disable automatic updates
-# zstyle ':omz:update' mode auto      # update automatically without asking
-zstyle ':omz:update' mode reminder  # just remind me to update when it's time
+zstyle ':omz:update' mode auto      # update automatically without asking
+# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
 # Uncomment the following line to change how often to auto-update (in days).
 # zstyle ':omz:update' frequency 13
@@ -76,21 +81,23 @@ zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(    
+    format_logs # My own custom plugin
+    # zsh-autosuggestions # https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md#oh-my-zsh
+    tmux # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/tmux
     # kube-ps1
     # helm
-    # virtualenv
     ssh-agent
     fzf
     git
     colored-man-pages
     docker
     docker-compose
-    # kubectl
+    kubectl
     aws
-    # helm
     # terraform
     # fluxcd
     pyenv
+    kind
     # istioctl
     # golang
 )
@@ -138,3 +145,24 @@ fi
 
 alias less="less -i"
 alias kgpw='watch -n 0.5 kubectl get po'
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+export PATH=$HOME/bin:$PATH
+
+source $HOME/.aliases
+
+# K8s
+export PATH="$PATH:/home/ubuntu/istio-1.17.2/bin"
+source <(kubectl completion zsh)
+
+# MUST BE LAST
+# zsh-syntax-highlighting
+# https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md#how-to-install
+source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# Functions
