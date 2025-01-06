@@ -1,4 +1,13 @@
+export VIRTUAL_ENV_DISABLE_PROMPT=1
 
+# NVM
+export NVM_DIR="$HOME/.nvm"
+[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" # This loads nvm
+[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
+export PATH="$HOME/.nvm/versions/node/v22.12.0/bin:$PATH"
+
+# Eksctl
+fpath=($fpath ~/.zsh/completion)
 
 # Allow vs code remote more memory
 export NODE_OPTIONS="--max-old-space-size=8192"
@@ -13,12 +22,7 @@ export ZSH=$HOME/.oh-my-zsh
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="fino"
-
-# pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init --path)"
+ZSH_THEME="ys"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -81,11 +85,12 @@ zstyle ':omz:update' mode auto      # update automatically without asking
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(    
+    common-aliases
     format_logs # My own custom plugin
     # zsh-autosuggestions # https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md#oh-my-zsh
     tmux # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/tmux
-    # kube-ps1
-    # helm
+    kube-ps1
+    helm
     ssh-agent
     fzf
     git
@@ -96,9 +101,9 @@ plugins=(
     aws
     # terraform
     # fluxcd
-    pyenv
     kind
-    # istioctl
+    istioctl
+    argocd
     # golang
 )
 
@@ -145,18 +150,11 @@ fi
 
 alias less="less -i"
 alias kgpw='watch -n 0.5 kubectl get po'
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+alias kgew='kubectl get events --watch'
 
 export PATH=$HOME/bin:$PATH
 
 source $HOME/.aliases
-
-# K8s
-export PATH="$PATH:/home/ubuntu/istio-1.17.2/bin"
-source <(kubectl completion zsh)
 
 # MUST BE LAST
 # zsh-syntax-highlighting
@@ -165,4 +163,10 @@ source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-# Functions
+export KUBE_EDITOR='vim'
+export EDITOR="code --wait"
+
+eval "$(uv generate-shell-completion zsh)"
+
+# Custom aliases and alias overrides
+alias l='ls -ahl'
