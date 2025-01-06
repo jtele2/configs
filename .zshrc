@@ -86,7 +86,6 @@ zstyle ':omz:update' mode auto      # update automatically without asking
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(    
     common-aliases
-    format_logs # My own custom plugin
     # zsh-autosuggestions # https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md#oh-my-zsh
     tmux # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/tmux
     kube-ps1
