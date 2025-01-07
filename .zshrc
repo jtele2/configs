@@ -153,12 +153,10 @@ alias kgew='kubectl get events --watch'
 
 export PATH=$HOME/bin:$PATH
 
-source $HOME/.aliases
-
 # MUST BE LAST
 # zsh-syntax-highlighting
 # https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md#how-to-install
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
