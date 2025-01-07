@@ -57,9 +57,9 @@ local exit_code="%(?,,C:%{$fg[red]%}%?%{$reset_color%})"
 PROMPT="
 %{$terminfo[bold]$fg[blue]%}#%{$reset_color%} \
 %{$terminfo[bold]$fg[yellow]%}%~%{$reset_color%}\
-${git_info}\
+${git_info} \
 ${venv_info}\
 ${kube_info}\
  \
-[%*] $exit_code
+[\$(date -u +'%H:%M:%S')] $exit_code
 %{$terminfo[bold]$fg[red]%}$ %{$reset_color%}"
