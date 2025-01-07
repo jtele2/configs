@@ -160,7 +160,7 @@ source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-export KUBE_EDITOR='vim'
+export KUBE_EDITOR='nano'
 export EDITOR="code --wait"
 
 eval "$(uv generate-shell-completion zsh)"
