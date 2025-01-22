@@ -19,3 +19,24 @@ ln -sf /home/ubuntu/configs/aliases.zsh /home/ubuntu/.oh-my-zsh/custom/aliases.z
 ln -sf /home/ubuntu/configs/functions.zsh /home/ubuntu/.oh-my-zsh/custom/functions.zsh
 ln -sf /home/ubuntu/configs/ys.zsh-theme /home/ubuntu/.oh-my-zsh/custom/themes/ys.zsh-theme
 ```
+
+## Path Notes
+
+When Zsh starts, it runs configuration files in the following order, depending on the shell type.
+For a Login Shell:
+
+1. /etc/zshenv: System-wide environment variables and configurations.
+2. ~/.zshenv: User-specific environment variables.
+3. /etc/zprofile: System-wide login-specific configurations.
+4. ~/.zprofile: User-specific login configurations.
+5. /etc/zshrc: System-wide interactive shell configurations.
+6. ~/.zshrc: User-specific interactive shell configurations.
+7. /etc/zlogin: System-wide login tasks.
+8. ~/.zlogin: User-specific login tasks.
+
+For a Non-Login Interactive Shell:
+
+1. /etc/zshenv
+2. ~/.zshenv
+3. /etc/zshrc
+4. ~/.zshrc

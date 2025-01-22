@@ -1,10 +1,3 @@
-# Clean, simple, compatible and meaningful.
-# Tested on Linux, Unix and Windows under ANSI colors.
-# It is recommended to use with a dark background.
-# Colors: black, red, green, yellow, *blue, magenta, cyan, and white.
-#
-# Mar 2013 Yad Smood
-
 # VCS
 YS_VCS_PROMPT_PREFIX1=" %{$reset_color%}on%{$fg[blue]%} "
 YS_VCS_PROMPT_PREFIX2=":%{$fg[cyan]%}"
@@ -32,33 +25,11 @@ else
   local kube_info=''
 fi
 
-# Virtualenv with venv support
-local venv_info='$(virtenv_prompt)'
-YS_THEME_VIRTUALENV_PROMPT_PREFIX=" %{$fg[green]%}"
-YS_THEME_VIRTUALENV_PROMPT_SUFFIX=" %{$reset_color%}"
-
-virtenv_prompt() {
-    if [[ -n "$VIRTUAL_ENV" ]]; then
-        echo "${YS_THEME_VIRTUALENV_PROMPT_PREFIX}$(basename $VIRTUAL_ENV)${YS_THEME_VIRTUALENV_PROMPT_SUFFIX}"
-    fi
-}
-
 local exit_code="%(?,,C:%{$fg[red]%}%?%{$reset_color%})"
 
-# Prompt format:
-#
-# PRIVILEGES USER @ MACHINE in DIRECTORY on git:BRANCH STATE [TIME] C:LAST_EXIT_CODE
-# $ COMMAND
-#
-# For example:
-#
-# % ys @ ys-mbp in ~/.oh-my-zsh on git:master x [21:47:42] C:0
-# $
-PROMPT="
-%{$terminfo[bold]$fg[blue]%}#%{$reset_color%} \
+PROMPT="%{$terminfo[bold]$fg[blue]%}%{$reset_color%}\
 %{$terminfo[bold]$fg[yellow]%}%~%{$reset_color%}\
 ${git_info} \
-${venv_info}\
 ${kube_info}\
  \
 [\$(date -u +'%H:%M:%S')] $exit_code

@@ -1,14 +1,28 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-# Path to your Oh My Zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
+# NVM
+export NVM_DIR="$HOME/.nvm"
+[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" # This loads nvm
+[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
+export PATH="$HOME/.nvm/versions/node/v22.12.0/bin:$PATH"
+
+# Eksctl
+fpath=($fpath ~/.zsh/completion)
+
+# Allow vs code remote more memory
+export NODE_OPTIONS="--max-old-space-size=8192"
+
+# If you come from bash you might have to change your $PATH.
+export PATH=$HOME/bin:/usr/local/bin:/usr/local/go/bin:$PATH
+
+# Path to your oh-my-zsh installation.
+export ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load --- if set to "random", it will
-# load a random theme each time Oh My Zsh is loaded, in which case,
+# load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="joe-custom"
+ZSH_THEME="ys"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -76,6 +90,7 @@ plugins=(
     tmux # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/tmux
     kube-ps1
     helm
+    ssh-agent
     fzf
     git
     colored-man-pages
@@ -89,9 +104,12 @@ plugins=(
     istioctl
     argocd
     # golang
-    uv
 )
 
+# Add ssh-keys with non-default name to ssh-agent
+zstyle :omz:plugins:ssh-agent identities id_rsa_ecs_github
+
+# Keep this line here - its order matters
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -102,41 +120,50 @@ source $ZSH/oh-my-zsh.sh
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='nvim'
-# fi
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+else
+  export EDITOR='vim'
+fi
 
 # Compilation flags
-# export ARCHFLAGS="-arch $(uname -m)"
+# export ARCHFLAGS="-arch x86_64"
 
-# Set personal aliases, overriding those provided by Oh My Zsh libs,
-# plugins, and themes. Aliases can be placed here, though Oh My Zsh
-# users are encouraged to define aliases within a top-level file in
-# the $ZSH_CUSTOM folder, with .zsh extension. Examples:
-# - $ZSH_CUSTOM/aliases.zsh
-# - $ZSH_CUSTOM/macos.zsh
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+# So that GitHub CoPilot Chat works
+# https://gist.github.com/sarimarton/55779cf95028860ea2126e61a6b377d0
+# fix_github_copilot
+
+# Set the REQUESTS_CA_BUNDLE if on WSL
+if [ -n "$WSL_DISTRO_NAME" ]; then
+    export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+fi
+
+alias less="less -i"
 alias kgpw='watch -n 0.5 kubectl get po'
-alias l='ls -ahl'
-alias tldr='docker run --rm -it -v ~/.tldr/:/root/.tldr/ nutellinoit/tldr'
-alias dps='docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Size}}\t{{.Ports}}"' 
+alias kgew='kubectl get events --watch'
 
-# Custom env settings
-export KUBE_EDITOR='vim'
-export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
-export AWS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
-export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
-export SSL_CERT_DIR=/etc/ssl/certs/
-export PIP_CERT=/etc/ssl/certs/ca-certificates.crt
-export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
-export PATH="/home/ubuntu/.local/bin:$PATH"
+export PATH=$HOME/bin:$PATH
 
-# Shell completions
+# MUST BE LAST
+# zsh-syntax-highlighting
+# https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md#how-to-install
+source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+export KUBE_EDITOR='nano'
+export EDITOR="code --wait"
+
 eval "$(uv generate-shell-completion zsh)"
-eval "$(uvx --generate-shell-completion zsh)"
+
+# Custom aliases and alias overrides
+alias l='ls -ahl'
