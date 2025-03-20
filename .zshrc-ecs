@@ -1,3 +1,5 @@
+# sg brew -c zsh
+
 # Add brew to path
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
@@ -165,3 +167,11 @@ function get_cluster_short() {
 }
 
 KUBE_PS1_CLUSTER_FUNCTION=get_cluster_short
+
+# Start ssh-agent if not already running
+if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+    eval "$(ssh-agent -s)"
+fi
+
+# Add your GitLab key if not already added
+ssh-add -l | grep -q "gitlab_ecspathfinder" || ssh-add ~/.ssh/gitlab_ecspathfinder
