@@ -1,0 +1,9 @@
+# ~/.config/direnv/direnvrc
+
+use_kubecontext() {
+  local context=$1
+  if [[ $(kubectl config current-context) != "$context" ]]; then
+    echo "Switching to kube context: $context"
+    kubectl config use-context "$context" >/dev/null
+  fi
+}
