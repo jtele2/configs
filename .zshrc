@@ -1,3 +1,8 @@
+# echo ">>> Start .zshrc"
+# set -x
+# Add brew to path
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
@@ -8,7 +13,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time Oh My Zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="joe-custom"
+ZSH_THEME="joe-custom-bira"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -71,25 +76,25 @@ zstyle ':omz:update' mode auto      # update automatically without asking
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(    
-    common-aliases
-    # zsh-autosuggestions # https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md#oh-my-zsh
-    tmux # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/tmux
-    kube-ps1
-    helm
-    fzf
-    git
-    colored-man-pages
-    docker
-    docker-compose
-    kubectl
-    aws
-    # terraform
-    # fluxcd
-    kind
-    istioctl
-    argocd
-    # golang
-    uv
+  direnv
+  common-aliases
+  tmux # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/tmux
+  kube-ps1
+  helm
+  virtualenv
+  fzf
+  git
+  colored-man-pages
+  docker
+  docker-compose
+  kubectl
+  aws
+  # fluxcd # Broken - prints "accepts at most 1 arg(s), received 2"
+  kind
+  istioctl
+  argocd
+  uv
+  aws
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -124,19 +129,40 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias kgpw='watch -n 0.5 kubectl get po'
 alias l='ls -ahl'
-alias tldr='docker run --rm -it -v ~/.tldr/:/root/.tldr/ nutellinoit/tldr'
 alias dps='docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Size}}\t{{.Ports}}"' 
+alias dbc='docker build -v /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro'
 
 # Custom env settings
 export KUBE_EDITOR='vim'
+export GIT_EDITOR='code --wait'
 export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 export AWS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 export SSL_CERT_DIR=/etc/ssl/certs/
 export PIP_CERT=/etc/ssl/certs/ca-certificates.crt
 export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
-export PATH="/home/ubuntu/.local/bin:$PATH"
 
 # Shell completions
-eval "$(uv generate-shell-completion zsh)"
+# eval "$(uv generate-shell-completion zsh)"
 eval "$(uvx --generate-shell-completion zsh)"
+
+# Node
+[ -s "/home/linuxbrew/.linuxbrew/opt/nvm/nvm.sh" ] && \. "/home/linuxbrew/.linuxbrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/home/linuxbrew/.linuxbrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/home/linuxbrew/.linuxbrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+# aactivator
+eval "$(aactivator init)"
+export VISUAL="code --wait"
+export EDITOR="code --wait"
+
+# My custom theme settings
+export KUBE_PS1_ON_NEW_LINE=false
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+
+function get_cluster_short() {
+  echo "$1" | cut -d / -f2-
+}
+
+KUBE_PS1_CLUSTER_FUNCTION=get_cluster_short
+# set +x
+# echo "<<< End .zshrc"
