@@ -1,5 +1,3 @@
-# echo ">>> Start .zshrc"
-# set -x
 # Add brew to path
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
@@ -76,25 +74,25 @@ zstyle ':omz:update' mode auto      # update automatically without asking
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(    
-  direnv
-  common-aliases
-  tmux # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/tmux
-  kube-ps1
-  helm
-  virtualenv
-  fzf
-  git
+  argocd
+  aws
   colored-man-pages
+  common-aliases
+  direnv
   docker
   docker-compose
-  kubectl
-  aws
-  # fluxcd # Broken - prints "accepts at most 1 arg(s), received 2"
-  kind
+  fzf
+  git
+  helm
   istioctl
-  argocd
+  kind
+  kube-ps1
+  kubectl
+  terraform
+  tmux # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/tmux
   uv
-  aws
+  virtualenv
+  # fluxcd # Broken - prints "accepts at most 1 arg(s), received 2"
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -164,5 +162,9 @@ function get_cluster_short() {
 }
 
 KUBE_PS1_CLUSTER_FUNCTION=get_cluster_short
-# set +x
-# echo "<<< End .zshrc"
+
+# TEMP: Try this if changes to my custom theme don't work. Make sure to set this:
+# "terminal.integrated.shellIntegration.enabled": true,
+# to false in settings.json.
+# Manual vs code shell integration
+# [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
