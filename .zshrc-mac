@@ -50,6 +50,19 @@ else
     export VISUAL='code'
 fi
 
+# ##################################
+# OPTIONS
+# History Options
+export SHARE_HISTORY="true"
+export EXTENDED_HISTORY="true"
+export HISTSIZE=10000
+export SAVEHIST=10000
+export HIST_IGNORE_ALL_DUPS="true"
+export HIST_REDUCE_BLANKS="true"
+export HIST_NO_STORE="true"
+export NO_HIST_BEEP="true"
+
+
 # MUST BE LAST
 # zsh-syntax-highlighting
 # https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md#how-to-install
