@@ -1,6 +1,6 @@
 # 🛠 Prompt pieces (simplified)
 
-# Colors: cyan, white, yellow, magenta, black, blue, red, grey, green
+# 🌈 Colors: cyan, white, yellow, magenta, black, blue, red, grey, green
 
 # Display the virtual environment name if active
 # Requires the 'virtualenv' plugin
