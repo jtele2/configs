@@ -18,8 +18,8 @@ local current_dir="%B%{$fg[blue]%}%1~ %{$reset_color%}"
 # Requires the 'git' plugin
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[yellow]%}‹"
 ZSH_THEME_GIT_PROMPT_SUFFIX="$(git_prompt_short_sha)› %{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}✗%{$fg[yellow]%}"
-ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[green]%}✔%{$fg[yellow]%}"
+ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}✗ %{$fg[yellow]%}"
+ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[green]%}✔ %{$fg[yellow]%}"
 local git_prompt_info='$(git_prompt_info)'
 
 # Display the current AWS profile in magenta, defaulting to 'default' if not set
