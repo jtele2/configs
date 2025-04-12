@@ -20,8 +20,7 @@ ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[yellow]%}‹"
 ZSH_THEME_GIT_PROMPT_SUFFIX="$(git_prompt_short_sha)› %{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}✗%{$fg[yellow]%}"
 ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[green]%}✔%{$fg[yellow]%}"
-ZSH_THEME_GIT_SHOW_UPSTREAM='true'
-DISABLE_UNTRACKED_FILES_DIRTY='true'
+DISABLE_UNTRACKED_FILES_DIRTY=1
 local git_prompt_info='$(git_prompt_info)'
 
 # Display the current AWS profile in magenta, defaulting to 'default' if not set
