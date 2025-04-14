@@ -160,3 +160,6 @@ print -P '%t'
 
 - `whence -vm *` versus `whence -vm "*"` (use the latter)
 - `whence` and `functions`
+- $IFS: Input Field Separator
+- set: Can be used to set options like setopt
+- `stty -a`: Show shell shortcuts
