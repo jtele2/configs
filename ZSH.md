@@ -16,7 +16,7 @@
 - The -o tells the shell to test an option, here login
 - `[[` is treated specially, which allows the shell to do some extra checks and allows more natural syntax
 
-Startup Scripts
+### Startup Scripts
 
 ```shell
 # Always run for every zsh
@@ -121,6 +121,17 @@ fn
 
 ### Prompts
 
+- Test prompts with `print -P '%t'`
+  - Examples
+
+```shell
+# Print red on white background
+print -P '%{${bg[white]}${fg[red]}%}foo%{${bg[default]}%}bar'
+
+# Print time
+print -P '%t'
+```
+
 - 2x ways of getting info into prompts like $PS1 which determins the usual prompt at start of a new command line
     1. Using percent escapes: `%` followed by another character, maybe w/ a number between the two (`%m%#`).
         - First `%` escape turns into name of host computer
@@ -140,3 +151,12 @@ fn
   - `%<<` is the basic form for truncation
   - The 10 after the `%' says that anything following is limited to 10 characters
   - The characters `...' are to be displayed whenever the prompt would otherwise be longer than that
+
+### Path
+
+- While the system needs $PATH because it doesn't understand arrays, it's much more flexible to be able to use arrays within the shell and hence pretty much forget about the $PATH form.
+
+## Chapter 3
+
+- `whence -vm *` versus `whence -vm "*"` (use the latter)
+- `whence` and `functions`
