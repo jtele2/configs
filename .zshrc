@@ -26,8 +26,19 @@ done
 DISABLE_UNTRACKED_FILES_DIRTY=true
 ZSH_THEME="custom-bira"
 
-# Homebrew
-export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+# Homebrew - Platform specific configuration
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS
+    export PATH="/opt/homebrew/bin:$PATH"
+    # zsh-syntax-highlighting for macOS
+    # REF: https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md#how-to-install
+    source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+else
+    # Linux
+    export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+    # zsh-syntax-highlighting for Linux
+    source /home/linuxbrew/.linuxbrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
 
 zstyle ':omz:update' mode auto      # update automatically without asking
 
@@ -75,6 +86,3 @@ else
     export PAGER='less -i'
     export VISUAL='code'
 fi
-
-# REF: https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
