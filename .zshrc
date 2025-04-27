@@ -53,8 +53,6 @@ plugins=(
     terraform
     tmux
     virtualenv
-    # REF: https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md#how-to-install
-    zsh-syntax-highlighting # MUST BE LAST
 )
 
 # Keep this line here - its order matters
@@ -77,3 +75,6 @@ else
     export PAGER='less -i'
     export VISUAL='code'
 fi
+
+# REF: https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md
+source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
