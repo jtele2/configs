@@ -15,14 +15,19 @@ export HISTSIZE=10000
 export SAVEHIST=10000
 
 # Path to my oh-my-zsh custom plugins and themes.
-if [[ -d $HOME/configs ]]; then
-    export ZSH_CUSTOM=$HOME/dev/configs/zsh_custom
-fi
+for dir in "$HOME/configs" "$HOME/dev/configs"; do
+    if [[ -d $dir ]]; then
+        export ZSH_CUSTOM="$dir/zsh_custom"
+        break
+    fi
+done
 
 # General Options
 DISABLE_UNTRACKED_FILES_DIRTY=true
-
 ZSH_THEME="custom-bira"
+
+# Homebrew
+export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
 
 zstyle ':omz:update' mode auto      # update automatically without asking
 
@@ -48,6 +53,8 @@ plugins=(
     terraform
     tmux
     virtualenv
+    # REF: https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md#how-to-install
+    zsh-syntax-highlighting # MUST BE LAST
 )
 
 # Keep this line here - its order matters
@@ -70,8 +77,3 @@ else
     export PAGER='less -i'
     export VISUAL='code'
 fi
-
-# MUST BE LAST
-# zsh-syntax-highlighting
-# https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md#how-to-install
-source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
