@@ -37,7 +37,7 @@ else
     # Linux
     export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
     # zsh-syntax-highlighting for Linux
-    source /home/linuxbrew/.linuxbrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
 zstyle ':omz:update' mode auto      # update automatically without asking
