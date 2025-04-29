@@ -92,6 +92,13 @@ plugins=(
     virtualenv
     zsh-syntax-highlighting
 )
+# ##############################################################################
+# Path updates must be made before sourcing oh-my-zsh.sh
+
+# Add .zsh-complete to fpath for completions: 
+# -REF: RIPGREP - https://github.com/BurntSushi/ripgrep/blob/master/FAQ.md#does-ripgrep-have-support-for-shell-auto-completion
+fpath=($HOME/.zsh-complete $fpath)
+# ##############################################################################
 
 source $ZSH/oh-my-zsh.sh
 
