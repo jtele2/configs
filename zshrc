@@ -131,8 +131,10 @@ source $ZSH/oh-my-zsh.sh
 # REF: https://kevinyank.com/posts/fix-system-beep-vscode/
 
 # Make less exit if content fits on one page
-export LESS="-F"
+# -S = Don't wrap long lines
+# -F = Exit if content fits on one screen
+# -R = Raw control characters, allows ANSI color codes to be displayed
+export LESS="-SFR"
 
 alias code="cursor"
 alias l="ls -ahl"
-
