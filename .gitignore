@@ -1,0 +1,18 @@
+# Custom
+get-docker.sh
+test.sh
+
+# Auto-made files
+**/.ipynb_checkpoints
+**/__pycache__
+**/_build
+
+# File folders 
+/inputs/*
+/outputs/*
+
+# File types
+*.csv
+*.json
+*.feather
+*.tar.gz

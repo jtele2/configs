@@ -1,0 +1,112 @@
+# ===========================
+# Path to your oh-my-zsh installation.
+export ZSH=$HOME/.oh-my-zsh
+
+# ===========================
+# History Options
+# Share history between all zsh sessions, allowing commands from other terminals to 
+# appear in history.
+setopt sharehistory
+
+# Save timestamps with history entries, showing when each command was executed.
+setopt extendedhistory
+
+# Don't store duplicate commands in history, even if they're not consecutive.
+setopt histignorealldups
+
+# Remove unnecessary whitespace from commands before storing in history.
+setopt histreduceblanks
+
+# Disable beeping when accessing non-existent history entries.
+setopt nohistbeep
+
+# Disable all terminal beeping.
+setopt nobeep
+
+# Maximum number of commands to keep in memory during the current session.
+export HISTSIZE=10000
+
+# Maximum number of commands to save to the history file when the shell exits.  
+export SAVEHIST=10000
+
+# Path to my oh-my-zsh custom plugins and themes. Note that it is in the "dev" dir.
+export ZSH_CUSTOM="$HOME/dev/configs/zsh_custom"
+
+# Disable checking for untracked files in git status, which can make the prompt faster.
+# This is useful if you have large repositories with many untracked files.
+DISABLE_UNTRACKED_FILES_DIRTY=true
+
+# My custom bira theme.
+ZSH_THEME="custom-bira"
+
+# Update automatically without asking.
+zstyle ':omz:update' mode auto
+
+# Plugins.
+plugins=(    
+    argocd
+    aws
+    colored-man-pages
+    common-aliases
+    docker
+    docker-compose
+    # Causes the accepts at most 1 arg(s), received 2 issue if the wrong flux is 
+    # installed. Make sure to install flux from the tap.
+    fluxcd 
+    fzf
+    git
+    git-auto-fetch
+    git-prompt
+    helm
+    istioctl
+    kind
+    kube-ps1
+    kubectl
+    nvm
+    ssh-agent
+    terraform
+    tmux
+    virtualenv
+)
+
+# ===========================
+# Path updates must be made before sourcing oh-my-zsh.sh
+
+# Add .zsh-complete to fpath for completions: 
+# -REF: RIPGREP - https://github.com/BurntSushi/ripgrep/blob/master/FAQ.md#does-ripgrep-have-support-for-shell-auto-completion
+fpath=($HOME/.zsh-complete $fpath)
+
+# Keep this line here - its order matters. Source the oh-my-zsh.sh file.
+source $ZSH/oh-my-zsh.sh
+
+# ===========================
+# USER CONFIGURATION
+
+# Annoying beep on mac when using ^+cmd+arrow? Fix below...
+# REF: https://kevinyank.com/posts/fix-system-beep-vscode/
+
+# I'm using cursor as my editor, but 'code' from vscode is what I'm used to
+alias code="cursor"
+
+# 'l' will show hidden files in long format
+alias l="ls -ahl"
+
+# Set editing mode explicitly to Emacs (or Vi)
+bindkey -e  # or bindkey -v
+
+# Redo command with ctrl+z
+bindkey '^z' redo  # ctrl+z
+
+# Make less exit if content fits on one page
+# -F = Exit if content fits on one screen
+# -R = Raw control characters, allows ANSI color codes to be displayed
+# -i = Ignore case
+export LESS="-FRi"
+
+# Preferred editor for local and remote sessions
+export EDITOR='cursor --wait'
+
+# MUST BE LAST
+# zsh-syntax-highlighting
+# https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md#how-to-install
+source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
