@@ -48,6 +48,7 @@ plugins=(
     aws
     colored-man-pages
     common-aliases
+    direnv
     docker
     docker-compose
     # Causes the accepts at most 1 arg(s), received 2 issue if the wrong flux is 

@@ -1,6 +1,7 @@
 # Custom
 get-docker.sh
 test.sh
+.envrc
 
 # Auto-made files
 **/.ipynb_checkpoints

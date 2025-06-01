@@ -40,9 +40,10 @@ local aws_profile='%{$fg[magenta]%}AWS:${AWS_PROFILE:-default}%{$reset_color%} '
 local utc_time='%{$fg[white]%}$(TZ=UTC strftime %H%M)%{$reset_color%} '
 
 # ── Kubernetes Context Section (optional)
-#    Shows the current Kubernetes context if the 'kube-ps1' plugin is active.
+#    Shows the current Kubernetes context if the 'kube-ps1' plugin is active
+#    and KUBE_PS1_ENABLED is set to "on".
 local kube_prompt=""
-if (( ${+plugins} )) && [[ "${plugins[@]}" =~ 'kube-ps1' ]]; then
+if (( ${+plugins} )) && [[ "${plugins[@]}" =~ 'kube-ps1' ]] && [[ "${KUBE_PS1_ENABLED}" == "on" ]]; then
     kube_prompt='$(kube_ps1) '
 fi
 
