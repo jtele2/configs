@@ -10,6 +10,9 @@ Prerequisites: Install [Zsh](https://www.zsh.org/) and [Oh My Zsh](https://ohmyz
 # Clone repository
 git clone https://github.com/jtele2/configs ~/configs
 
+# Install custom plugins (e.g., autoswitch_virtualenv)
+~/configs/setup_plugins.sh
+
 # Symlink the zshrc file
 ln -sf ~/configs/zshrc ~/.zshrc
 
@@ -25,8 +28,9 @@ That's it! The `.zshrc` file automatically points Oh My Zsh to use the custom di
 - **zsh_custom/** - Oh My Zsh customizations
   - **completions/** - Shell completions (eksctl, kind, kustomize, ripgrep)
   - **themes/** - Custom themes (custom-bira)
-  - **plugins/** - Custom plugins
+  - **plugins/** - Custom plugins (autoswitch_virtualenv via setup script)
   - Git prompt patches
+- **setup_plugins.sh** - Script to install custom Oh My Zsh plugins from git repos
 - **k9s/** - Kubernetes CLI configuration
 - **direnvrc** - direnv configuration
 - **ZSH.md** - Zsh quick reference guide

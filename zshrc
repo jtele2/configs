@@ -34,6 +34,7 @@ zstyle ':omz:update' mode auto       # Auto-update without asking
 
 # Plugins
 plugins=(    
+    autoswitch_virtualenv
     argocd
     aws
     colored-man-pages

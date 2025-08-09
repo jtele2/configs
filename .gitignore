@@ -5,6 +5,9 @@
 get-docker.sh
 test.sh
 
+# Cloned Oh My Zsh plugins
+zsh_custom/plugins/autoswitch_virtualenv/
+
 # Auto-made files
 **/.ipynb_checkpoints
 **/__pycache__
