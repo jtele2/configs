@@ -39,6 +39,7 @@ plugins=(
     aws
     colored-man-pages
     common-aliases
+    direnv
     docker
     docker-compose
     fluxcd
@@ -67,8 +68,8 @@ source $ZSH/oh-my-zsh.sh
 # ===========================
 
 # Editor preferences
-export EDITOR='vim'
-export VISUAL='vim'
+export EDITOR='cursor'
+export VISUAL='cursor'
 
 # Aliases
 alias code='cursor'
@@ -112,3 +113,8 @@ typeset -U path PATH
 
 # Load additional configurations if they exist
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+
+# Load the vault token only on Linux
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    VAULT_URL_FOR_DYNACONF=$(cat $HOME/.vault-token-prod)
+fi
