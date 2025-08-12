@@ -6,7 +6,12 @@
 export ZSH=$HOME/.oh-my-zsh
 
 # Path to custom zsh configuration (from configs repo)
-export ZSH_CUSTOM=$HOME/configs/zsh_custom
+# Adjust path based on user
+if [[ "$USER" == "joe" ]] || [[ "$USER" == "work" ]]; then
+    export ZSH_CUSTOM=$HOME/dev/configs/zsh_custom
+else
+    export ZSH_CUSTOM=$HOME/configs/zsh_custom
+fi
 
 # Set theme
 ZSH_THEME="custom-bira"
