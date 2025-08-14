@@ -6,6 +6,9 @@
 .sync/
 *.local
 
+# Oh My Zsh custom plugins (installed via setup_plugins.sh)
+zsh_custom/plugins/autoswitch_virtualenv/
+
 # OS
 .DS_Store
 
