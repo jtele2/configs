@@ -61,6 +61,22 @@ csync restore
 csync setup-addons
 ```
 
+### Sync Options
+
+```bash
+# Preview changes without syncing
+csync sync --dry-run
+
+# Force push local changes (overwrites remote)
+csync sync --force-push
+
+# Force pull remote changes (overwrites local)
+csync sync --force-pull
+
+# Run in background (quiet mode)
+csync sync --background
+```
+
 ## How It Works
 
 ### File Synchronization
@@ -140,11 +156,31 @@ uv sync
 ## Development
 
 The csync tool is built with:
-- **Python** with Click and Rich libraries
+- **Python** with Click and Rich libraries  
 - **uv** for package management
 - **ruff** for linting and formatting
 
-See `csync/README.md` for development details.
+### Architecture
+- `config.py` - Configuration and environment detection
+- `sync.py` - Core synchronization logic
+- `marked.py` - Marked files management
+- `symlinks.py` - Symlink creation and management
+- `backup.py` - Backup and restore functionality
+- `status.py` - Status display with Rich formatting
+- `addons.py` - Plugin and addon management
+- `cli.py` - Click CLI interface
+
+### Development Commands
+```bash
+# Format code with ruff
+cd csync && ruff format .
+
+# Lint code
+ruff check .
+
+# Run with uv
+uv run csync
+```
 
 ## License
 
