@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Config Sync System
 # Syncs configuration files across work Mac, personal Mac, and EC2 instance
@@ -153,6 +153,7 @@ restore_backup() {
 # Function to create config symlinks
 create_symlinks() {
     local force="${1:-false}"
+    local symlink_created=false
     
     # Define symlinks to create (using arrays for compatibility)
     local sources=("$CONFIGS_DIR/zshrc" "$CONFIGS_DIR/direnvrc")
@@ -184,7 +185,21 @@ create_symlinks() {
         # Create symlink
         ln -sf "$source" "$target"
         log "  ✓ Linked: $target → $source" "$GREEN"
+        
+        # Mark that we created/updated zshrc symlink
+        if [[ "$target" == "$HOME/.zshrc" ]]; then
+            symlink_created=true
+        fi
     done
+    
+    # Reload Oh My Zsh if zshrc was updated and we're in a zsh shell
+    if [[ "$symlink_created" == "true" ]] && [[ -n "$ZSH_VERSION" ]]; then
+        log "  🔄 Reloading Oh My Zsh configuration..." "$BLUE"
+        if [[ -f "$HOME/.zshrc" ]]; then
+            source "$HOME/.zshrc"
+            log "  ✓ Configuration reloaded" "$GREEN"
+        fi
+    fi
 }
 
 # Function to setup sync environment
@@ -438,7 +453,15 @@ setup_addons() {
     
     # Additional addon setups can be added here
     log "✅ Addon setup complete!" "$GREEN"
-    log "💡 Restart your shell or run 'source ~/.zshrc' to load changes" "$YELLOW"
+    
+    # Reload configuration if in zsh
+    if [[ -n "$ZSH_VERSION" ]] && [[ -f "$HOME/.zshrc" ]]; then
+        log "🔄 Reloading zsh configuration..." "$BLUE"
+        source "$HOME/.zshrc"
+        log "✓ Configuration reloaded" "$GREEN"
+    else
+        log "💡 Restart your shell or run 'source ~/.zshrc' to load changes" "$YELLOW"
+    fi
 }
 
 # Function to perform sync
