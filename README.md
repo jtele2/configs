@@ -1,6 +1,6 @@
 # Config Repository 🚀
 
-Personal configuration files with automatic synchronization across machines using **csync**.
+Personal configuration files with automatic synchronization across machines using **csync** - a beautiful Python-based tool for managing dotfiles and configurations.
 
 ## Quick Setup
 
@@ -32,13 +32,14 @@ csync
 
 ### csync Tool  
 
-A beautiful Python-based config synchronization tool that:
+A powerful Python-based config synchronization tool that:
 
-- 🔄 Syncs configurations across Mac, Linux, and EC2
-- 📌 Marks external files for syncing (like ~/.claude/)
-- 💾 Creates automatic backups before each sync
-- 🔗 Manages symlinks for config files
-- 🎨 Beautiful CLI with colors and formatting
+- 🔄 **Automatic Sync** - Seamlessly syncs configurations across Mac, Linux, and EC2
+- 📌 **Marked Files** - Track external files for syncing (like ~/.claude/, ~/.vimrc)
+- 💾 **Smart Backups** - Automatic versioned backups before each sync
+- 🔗 **Symlink Management** - Intelligent symlink creation and maintenance
+- 🎨 **Beautiful CLI** - Rich formatting with colors and progress indicators
+- ⚡ **Fast & Reliable** - Built with modern Python tooling (uv, ruff)
 
 ## Common Commands
 
@@ -172,13 +173,15 @@ uv sync
 
 ## Development
 
-The csync tool is built with:
+The csync tool is built with modern Python tooling:
 
-- **Python** with Click and Rich libraries  
-- **GitPython** for git operations
-- **PyYAML** for configuration files
-- **uv** for package management
-- **ruff** for linting and formatting
+- **Python 3.11+** - Modern Python with type hints
+- **Click** - Command-line interface framework
+- **Rich** - Beautiful terminal formatting
+- **GitPython** - Programmatic git operations
+- **PyYAML** - Configuration file management
+- **uv** - Ultra-fast Python package manager
+- **ruff** - Lightning-fast linter and formatter
 
 ### Architecture
 
