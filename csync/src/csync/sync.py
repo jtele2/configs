@@ -186,7 +186,7 @@ class Syncer:
             if dry_run:
                 console.print("[blue]DRY RUN: Would commit changes[/blue]")
             else:
-                self.repo.index.add("*")
+                self.repo.index.add(".")
                 commit_msg = (
                     f"Sync from {machine_id} at {datetime.now():%Y-%m-%d %H:%M:%S}"
                 )
