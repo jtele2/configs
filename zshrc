@@ -115,25 +115,6 @@ fi
 # Remove duplicate PATH entries
 typeset -U path PATH
 
-# ===========================
-# CONFIG SYNC
-# ===========================
-
-# Auto-sync configs on shell startup (background, non-blocking)
-if [[ -d "$HOME/dev/configs" ]]; then
-    (cd "$HOME/dev/configs" && ./sync.sh --background &>/dev/null &)
-elif [[ -d "$HOME/configs" ]]; then
-    (cd "$HOME/configs" && ./sync.sh --background &>/dev/null &)
-fi
-
-# Sync-related aliases
-alias sync-configs='cd $([ -d "$HOME/dev/configs" ] && echo "$HOME/dev/configs" || echo "$HOME/configs") && ./sync.sh'
-alias sync-status='cd $([ -d "$HOME/dev/configs" ] && echo "$HOME/dev/configs" || echo "$HOME/configs") && ./sync.sh --status'
-alias sync-push='cd $([ -d "$HOME/dev/configs" ] && echo "$HOME/dev/configs" || echo "$HOME/configs") && ./sync.sh --force-push'
-alias sync-pull='cd $([ -d "$HOME/dev/configs" ] && echo "$HOME/dev/configs" || echo "$HOME/configs") && ./sync.sh --force-pull'
-alias sync-mark='cd $([ -d "$HOME/dev/configs" ] && echo "$HOME/dev/configs" || echo "$HOME/configs") && ./sync.sh --mark'
-alias sync-help='cd $([ -d "$HOME/dev/configs" ] && echo "$HOME/dev/configs" || echo "$HOME/configs") && ./sync.sh --help'
-
 # Load additional configurations if they exist
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 
