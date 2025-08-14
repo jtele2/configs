@@ -32,7 +32,7 @@ detect_environment() {
     MACHINE_ID_FILE="$SYNC_DIR/machine-id"
     LAST_SYNC_FILE="$SYNC_DIR/last-sync"
     SYNC_STATUS_FILE="$SYNC_DIR/sync-status"
-    MARKED_FILES="$SYNC_DIR/marked-files.txt"
+    MARKED_FILES="$CONFIGS_DIR/.marked-files"
     EXTERNAL_DIR="$CONFIGS_DIR/external"
     BRANCH="${SYNC_BRANCH:-main}"
 }
