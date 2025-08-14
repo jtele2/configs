@@ -1,18 +1,11 @@
 """Core synchronization functionality."""
 
-import os
-import shutil
-import subprocess
 import tarfile
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 import git
 from rich.console import Console
-from rich.panel import Panel
-from rich.progress import Progress
-from rich.table import Table
 
 from csync.config import Config
 
@@ -186,7 +179,8 @@ class Syncer:
             if dry_run:
                 console.print("[blue]DRY RUN: Would commit changes[/blue]")
             else:
-                self.repo.index.add(".")
+                # Use git add with --all flag to respect .gitignore
+                self.repo.git.add("--all", ".")
                 commit_msg = (
                     f"Sync from {machine_id} at {datetime.now():%Y-%m-%d %H:%M:%S}"
                 )
