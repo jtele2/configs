@@ -2,20 +2,18 @@
 allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git commit:*)
 argument-hint: [message]
 description: Create a git commit with conventional commit format and emoji
-model: claude-3-5-haiku-latest
 ---
 
 # Claude Command: Commit
 
-This command helps you create well-formatted commits with conventional commit messages and emoji.
+Create well-formatted commits with conventional commit messages and emoji.
 
 ## What This Command Does
 
-1. Checks which files are staged with `git status --porcelain`
-2. If no files are staged, returns a message to the user "No staged files to commit"
-3. Performs `git diff --cached` to understand what changes are being committed
-4. Creates a commit message using emoji conventional commit format
-5. If a message argument is provided, uses it as guidance for the commit message
+1. Performs `git diff --cached` to understand what changes are being committed
+2. Creates a commit message using emoji conventional commit format
+3. Always performs the commit (no checking for staged files)
+4. If a message argument is provided, uses it as guidance for the commit message
 
 ## Commit Message Guidelines
 
@@ -168,6 +166,4 @@ This command helps you create well-formatted commits with conventional commit me
 - Add login and logout endpoints
 - Create middleware for protected routes
 - Include refresh token mechanism
-
-Closes #123
 ```
