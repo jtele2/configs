@@ -58,7 +58,13 @@ def sync(force_push=False, force_pull=False, dry_run=False, background=False):
         sys.exit(1)
 
     syncer = Syncer(config)
-    syncer.sync(force_push, force_pull, dry_run, background)
+    result = syncer.sync(force_push, force_pull, dry_run, background)
+    
+    # Show status after sync (unless running in background mode)
+    if not background and result:
+        console.print()  # Add a blank line between sync output and status
+        status_display = StatusDisplay(config)
+        status_display.show_status()
 
 
 @cli.command()

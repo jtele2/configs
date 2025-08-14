@@ -18,16 +18,25 @@ echo -e "${GREEN}Setting up Oh My Zsh custom plugins...${NC}"
 # Create plugins directory if it doesn't exist
 mkdir -p "${PLUGINS_DIR}"
 
+# Create a temporary directory for cloning
+TMP_DIR=$(mktemp -d)
+trap "rm -rf ${TMP_DIR}" EXIT
+
 # autoswitch_virtualenv plugin
 AUTOSWITCH_DIR="${PLUGINS_DIR}/autoswitch_virtualenv"
 if [ -d "${AUTOSWITCH_DIR}" ]; then
     echo -e "${YELLOW}autoswitch_virtualenv already installed, updating...${NC}"
-    cd "${AUTOSWITCH_DIR}"
-    git pull origin master
-else
-    echo -e "${GREEN}Installing autoswitch_virtualenv...${NC}"
-    git clone https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git "${AUTOSWITCH_DIR}"
+    # Remove old version
+    rm -rf "${AUTOSWITCH_DIR}"
 fi
+
+echo -e "${GREEN}Installing autoswitch_virtualenv...${NC}"
+# Clone to temp directory
+git clone https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git "${TMP_DIR}/autoswitch_virtualenv"
+
+# Copy files without .git directory
+mkdir -p "${AUTOSWITCH_DIR}"
+rsync -av --exclude='.git' --exclude='.github' --exclude='.gitignore' "${TMP_DIR}/autoswitch_virtualenv/" "${AUTOSWITCH_DIR}/"
 
 echo -e "${GREEN}✓ Plugin setup complete!${NC}"
 echo -e "${YELLOW}Note: Make sure to restart your shell or run 'source ~/.zshrc' to load the plugins.${NC}"
