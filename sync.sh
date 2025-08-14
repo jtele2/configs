@@ -154,14 +154,13 @@ restore_backup() {
 create_symlinks() {
     local force="${1:-false}"
     
-    # Define symlinks to create
-    declare -A symlinks=(
-        ["$CONFIGS_DIR/zshrc"]="$HOME/.zshrc"
-        ["$CONFIGS_DIR/direnvrc"]="$HOME/.direnvrc"
-    )
+    # Define symlinks to create (using arrays for compatibility)
+    local sources=("$CONFIGS_DIR/zshrc" "$CONFIGS_DIR/direnvrc")
+    local targets=("$HOME/.zshrc" "$HOME/.direnvrc")
     
-    for source in "${!symlinks[@]}"; do
-        local target="${symlinks[$source]}"
+    for i in "${!sources[@]}"; do
+        local source="${sources[$i]}"
+        local target="${targets[$i]}"
         
         # Skip if source doesn't exist
         [[ ! -f "$source" ]] && continue
