@@ -5,6 +5,7 @@ This document outlines the design for a Git-based configuration sync system acro
 ## System Overview
 
 The sync system uses Git as the backbone with:
+
 - Automatic conflict resolution
 - Machine-specific customization support
 - Selective file syncing via marking system
@@ -18,7 +19,8 @@ The sync system uses Git as the backbone with:
 ### Directory Structure
 
 **Mac (Work & Personal):**
-```
+
+```text
 ~/dev/configs/                  # Main repo on Mac machines
 ├── .sync/                      # Sync metadata directory
 │   ├── machine-id              # Unique machine identifier
@@ -34,13 +36,15 @@ The sync system uses Git as the backbone with:
 ```
 
 **EC2 Instance:**
-```
+
+```text
 ~/configs/                      # Main repo on EC2 (different path!)
 ├── [same structure as above]
 ```
 
 **External marked files:**
-```
+
+```text
 ~/                              # External marked files
 ├── .config/some-app/config     # Example external file marked for sync
 └── .tool/settings.json         # Another marked file
@@ -49,6 +53,7 @@ The sync system uses Git as the backbone with:
 ### Machine Detection
 
 The system auto-detects the environment and config path:
+
 ```bash
 # Detect if we're on EC2 or Mac
 if [[ -f /etc/ec2-metadata ]]; then
@@ -76,12 +81,14 @@ MACHINE_ID="${USER}@$(hostname -s)-${MACHINE_TYPE}"
 The marking system allows syncing files that live outside the repository:
 
 **Design Approach:**
+
 - Maintain a `.sync/marked-files.txt` manifest of external files to sync
 - Store copies of marked files in `.sync/external-files/` (gitignored locally)
 - Track the actual synced versions in a separate `external/` directory in the repo
 - Create symlinks from original locations to the synced copies
 
 **Mark Command Flow:**
+
 1. User runs: `sync.sh --mark ~/.config/app/config`
 2. Script adds path to `.sync/marked-files.txt`
 3. Copies file to `~/configs/external/.config/app/config` (preserving path structure)
@@ -89,6 +96,7 @@ The marking system allows syncing files that live outside the repository:
 5. Commits the file to git
 
 **Unmark Command Flow:**
+
 1. User runs: `sync.sh --unmark ~/.config/app/config`
 2. Script removes path from `.sync/marked-files.txt`
 3. Replaces symlink with actual file copy
@@ -97,6 +105,7 @@ The marking system allows syncing files that live outside the repository:
 ### 2. Sync Operations
 
 **Normal Sync Flow:**
+
 1. Check network connectivity to GitHub
 2. Create backup of current state
 3. Stash any uncommitted changes
@@ -107,6 +116,7 @@ The marking system allows syncing files that live outside the repository:
 8. Push to remote
 
 **Conflict Resolution Priority:**
+
 1. Try rebase first (keeps linear history)
 2. Fall back to merge if rebase fails
 3. Offer force options (--force-push or --force-pull) for manual override
@@ -114,6 +124,7 @@ The marking system allows syncing files that live outside the repository:
 ### 3. Machine-Specific Customization
 
 **Approach:**
+
 - Use `.local` suffix for machine-specific files (e.g., `zshrc.local`)
 - Main configs source their `.local` variants if they exist
 - Machine ID based on `${USER}@$(hostname -s)`
@@ -122,6 +133,7 @@ The marking system allows syncing files that live outside the repository:
 ### 4. Backup System
 
 **Strategy:**
+
 - Create timestamped tar.gz before each sync
 - Include both repo files and marked external files
 - Exclude .git, .sync, and *.local files
@@ -131,6 +143,7 @@ The marking system allows syncing files that live outside the repository:
 ## Command Interface
 
 ### Basic Commands
+
 ```bash
 ./sync.sh                    # Normal sync
 ./sync.sh --setup            # Initial setup on new machine
@@ -138,6 +151,7 @@ The marking system allows syncing files that live outside the repository:
 ```
 
 ### File Marking
+
 ```bash
 ./sync.sh --mark PATH        # Mark a file/directory for syncing
 ./sync.sh --unmark PATH      # Stop syncing a file/directory
@@ -145,6 +159,7 @@ The marking system allows syncing files that live outside the repository:
 ```
 
 ### Sync Control
+
 ```bash
 ./sync.sh --dry-run          # Preview what would happen
 ./sync.sh --force-push       # Force local → remote
@@ -153,6 +168,7 @@ The marking system allows syncing files that live outside the repository:
 ```
 
 ### Recovery
+
 ```bash
 ./sync.sh --restore          # Interactive restore from backup
 ./sync.sh --restore DATE     # Restore specific backup
@@ -161,6 +177,7 @@ The marking system allows syncing files that live outside the repository:
 ## Implementation Plan
 
 ### Phase 1: Core Sync Enhancement
+
 - [ ] Enhance existing sync.sh with better conflict resolution
 - [ ] Add dry-run mode for safety
 - [ ] Implement force-push and force-pull options
@@ -168,6 +185,7 @@ The marking system allows syncing files that live outside the repository:
 - [ ] Create setup function for new machines
 
 ### Phase 2: File Marking System
+
 - [ ] Implement mark/unmark commands
 - [ ] Create manifest management for marked files
 - [ ] Add symlink creation and management
@@ -175,12 +193,14 @@ The marking system allows syncing files that live outside the repository:
 - [ ] Add list-marked command
 
 ### Phase 3: Backup and Recovery
+
 - [ ] Enhance backup to include marked files
 - [ ] Implement backup rotation (keep last N)
 - [ ] Add restore functionality
 - [ ] Create backup-only mode
 
 ### Phase 4: Status and Monitoring
+
 - [ ] Add status command showing:
   - Current machine ID
   - Last sync time
@@ -190,6 +210,7 @@ The marking system allows syncing files that live outside the repository:
 - [ ] Implement sync history tracking
 
 ### Phase 5: Automation & UI
+
 - [ ] Add to .zshrc for background sync
 - [ ] Add sync status indicator to shell prompt
 - [ ] Create sync status function for prompt
@@ -202,6 +223,7 @@ The marking system allows syncing files that live outside the repository:
 Add a sync status indicator to the custom-bira.zsh-theme prompt:
 
 **Status Icons:**
+
 - `✓` - Synced (green): Everything up to date
 - `↑` - Pending push (yellow): Local changes need pushing
 - `↓` - Pending pull (cyan): Remote changes available
@@ -210,12 +232,14 @@ Add a sync status indicator to the custom-bira.zsh-theme prompt:
 - ` ` - No icon if sync disabled or not in configs repo
 
 **Implementation Approach:**
+
 1. Create a `sync_status()` function in sync.sh that outputs current status
 2. Write status to `.sync/sync-status` file for fast prompt access
 3. Add status check to custom-bira.zsh-theme
 4. Update status file during sync operations
 
 **Prompt Integration:**
+
 ```bash
 # In custom-bira.zsh-theme
 function sync_indicator() {
@@ -236,6 +260,7 @@ PROMPT="╭─$(nix_indicator)${sync_status}${current_dir}..."
 ### Background Sync in .zshrc
 
 **Auto-sync Strategy:**
+
 ```bash
 # In zshrc
 # Run sync in background on shell startup
@@ -253,23 +278,27 @@ alias sync-status='cd $([ -d "$HOME/dev/configs" ] && echo "$HOME/dev/configs" |
 ## Technical Decisions
 
 ### Why Symlinks for Marked Files?
+
 - Preserves original file locations expected by applications
 - Changes immediately reflected without needing sync
 - Easy to see what's managed (symlink indicator)
 - Simple to revert (replace symlink with file)
 
 ### Why Separate external/ Directory?
+
 - Keeps repository organized
 - Preserves original path structure
 - Avoids polluting repo root with random files
 - Makes it clear what's external vs native to configs repo
 
 ### Why Different Paths on Mac vs EC2?
+
 - Mac: `~/dev/configs` keeps all dev work organized in ~/dev
 - EC2: `~/configs` follows standard dotfile location
 - Auto-detection prevents configuration errors
 
 ### Error Handling Strategy
+
 - Never lose data (backup before operations)
 - Fail loudly and clearly (colored error messages)
 - Provide recovery suggestions
@@ -285,6 +314,7 @@ alias sync-status='cd $([ -d "$HOME/dev/configs" ] && echo "$HOME/dev/configs" |
 ## Testing Strategy
 
 ### Manual Test Cases
+
 1. Normal sync with no conflicts
 2. Sync with merge conflicts
 3. Mark and sync external file
@@ -294,6 +324,7 @@ alias sync-status='cd $([ -d "$HOME/dev/configs" ] && echo "$HOME/dev/configs" |
 7. Setup on fresh machine
 
 ### Edge Cases to Test
+
 - Simultaneous edits on both machines
 - Marking already-symlinked files
 - Unmarking deleted files
@@ -314,6 +345,7 @@ alias sync-status='cd $([ -d "$HOME/dev/configs" ] && echo "$HOME/dev/configs" |
 ## Development TODO List
 
 ### Immediate Tasks
+
 - [ ] Review and enhance existing sync.sh structure
 - [ ] Add proper argument parsing with getopts
 - [ ] Implement machine detection (Mac vs EC2)
@@ -322,6 +354,7 @@ alias sync-status='cd $([ -d "$HOME/dev/configs" ] && echo "$HOME/dev/configs" |
 - [ ] Add .gitignore entries for .sync/ and *.local
 
 ### Core Sync Tasks  
+
 - [ ] Implement stash/unstash logic
 - [ ] Add rebase-first, merge-fallback strategy
 - [ ] Create force-push and force-pull functions
@@ -330,6 +363,7 @@ alias sync-status='cd $([ -d "$HOME/dev/configs" ] && echo "$HOME/dev/configs" |
 - [ ] Add --background mode for .zshrc
 
 ### Marking System Tasks
+
 - [ ] Create mark_file() function
 - [ ] Create unmark_file() function
 - [ ] Implement manifest file management
@@ -337,12 +371,14 @@ alias sync-status='cd $([ -d "$HOME/dev/configs" ] && echo "$HOME/dev/configs" |
 - [ ] Create external/ directory structure
 
 ### Backup Tasks
+
 - [ ] Enhance backup function with marked files
 - [ ] Implement rotation logic
 - [ ] Create restore function
 - [ ] Add backup listing
 
 ### Shell Prompt Integration
+
 - [ ] Create sync_status() function
 - [ ] Implement .sync/sync-status file updates
 - [ ] Add sync_indicator() to custom-bira.zsh-theme
@@ -350,6 +386,7 @@ alias sync-status='cd $([ -d "$HOME/dev/configs" ] && echo "$HOME/dev/configs" |
 - [ ] Add color coding for different states
 
 ### UI/UX Tasks
+
 - [ ] Add comprehensive help text
 - [ ] Implement status display
 - [ ] Add progress indicators
@@ -357,6 +394,7 @@ alias sync-status='cd $([ -d "$HOME/dev/configs" ] && echo "$HOME/dev/configs" |
 - [ ] Add verbose mode option
 
 ### Testing Tasks
+
 - [ ] Create test harness
 - [ ] Write test cases for each command
 - [ ] Test on work Mac (~/dev/configs)
@@ -368,6 +406,7 @@ alias sync-status='cd $([ -d "$HOME/dev/configs" ] && echo "$HOME/dev/configs" |
 ## Success Criteria
 
 The sync system is successful when:
+
 1. Configs stay synchronized across all three machines (work Mac, personal Mac, EC2) without manual intervention
 2. Machine-specific settings remain isolated per environment
 3. External files can be selectively synced
