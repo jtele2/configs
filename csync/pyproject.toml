@@ -44,4 +44,7 @@ line-ending = "auto"
 [dependency-groups]
 dev = [
     "ruff>=0.12.8",
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.0.0",
 ]

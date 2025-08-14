@@ -1,0 +1,55 @@
+name: Test csync gitignore compliance
+
+on:
+  push:
+    paths:
+      - 'csync/**'
+      - '.github/workflows/test-csync.yml'
+  pull_request:
+    paths:
+      - 'csync/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.11']
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+      with:
+        version: "latest"
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      run: |
+        uv python install ${{ matrix.python-version }}
+        uv python pin ${{ matrix.python-version }}
+      working-directory: ./csync
+    
+    - name: Install dependencies
+      run: |
+        uv sync --dev
+      working-directory: ./csync
+    
+    - name: Run gitignore compliance tests
+      run: |
+        uv run pytest tests/test_gitignore_compliance.py -v --tb=short
+      working-directory: ./csync
+    
+    - name: Verify sync.py uses correct git add command
+      run: |
+        # Double-check that sync.py doesn't contain the dangerous pattern
+        if grep -q 'repo\.index\.add(".")' src/csync/sync.py; then
+          # Check if it's only in comments
+          if grep -v '#' src/csync/sync.py | grep -q 'repo\.index\.add(".")'; then
+            echo "❌ CRITICAL: sync.py contains dangerous 'repo.index.add(\".\")' pattern!"
+            exit 1
+          fi
+        fi
+        echo "✅ sync.py uses safe git add patterns"
+      working-directory: ./csync

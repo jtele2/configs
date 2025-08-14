@@ -179,8 +179,23 @@ class Syncer:
             if dry_run:
                 console.print("[blue]DRY RUN: Would commit changes[/blue]")
             else:
-                # Use git add with --all flag to respect .gitignore
+                # CRITICAL: Use git add with --all flag to respect .gitignore
+                # NEVER use repo.index.add(".") as it bypasses .gitignore!
                 self.repo.git.add("--all", ".")
+
+                # Safeguard: Verify no ignored files are staged
+                staged_files = [item.a_path for item in self.repo.index.diff("HEAD")]
+                dangerous_patterns = ["__pycache__", ".git/", ".pyc", ".local", ".env"]
+                for staged in staged_files:
+                    for pattern in dangerous_patterns:
+                        if pattern in staged:
+                            console.print(
+                                f"[red]⚠️  WARNING: Staged file '{staged}' matches ignored pattern '{pattern}'![/red]"
+                            )
+                            console.print(
+                                "[yellow]This should not happen. Please report this issue.[/yellow]"
+                            )
+
                 commit_msg = (
                     f"Sync from {machine_id} at {datetime.now():%Y-%m-%d %H:%M:%S}"
                 )
