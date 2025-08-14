@@ -1,27 +1,32 @@
 {
-    "includeCoAuthoredBy": false,
-    "hooks": {
-        "PostToolUse": [
-            {
-                "matcher": "Edit|MultiEdit|Write",
-                "hooks": [
-                    {
-                        "type": "command",
-                        "command": "$HOME/.claude/format-python.sh"
-                    }
-                ]
-            }
-        ],
-        "Notification": [
-            {
-                "matcher": "",
-                "hooks": [
-                    {
-                        "type": "command",
-                        "command": "$HOME/.claude/notify.sh"
-                    }
-                ]
-            }
+  "includeCoAuthoredBy": false,
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/format-python.sh"
+          }
         ]
-    }
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/notify.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "npx -y ccstatusline@latest",
+    "padding": 0
+  }
 }
