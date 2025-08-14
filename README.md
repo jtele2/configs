@@ -1,48 +1,151 @@
-# Zsh Dotfiles
+# Config Repository 🚀
 
-Personal Zsh configuration with Oh My Zsh, custom themes, and development tool completions.
+Personal configuration files with automatic synchronization across machines using **csync**.
 
 ## Quick Setup
 
-Prerequisites: Install [Zsh](https://www.zsh.org/) and [Oh My Zsh](https://ohmyz.sh/).
-
 ```bash
-# Clone repository
-git clone https://github.com/jtele2/configs ~/configs
+# Clone repository (Mac)
+git clone git@github.com:jtele2/configs.git ~/dev/configs
 
-# Install custom plugins (e.g., autoswitch_virtualenv)
-~/configs/setup_plugins.sh
+# Clone repository (Linux/EC2)
+git clone git@github.com:jtele2/configs.git ~/configs
 
-# Symlink the zshrc file
-ln -sf ~/configs/zshrc ~/.zshrc
+# Initial setup
+cd ~/configs  # or ~/dev/configs on Mac
+cd csync && uv sync && cd ..
+source csync_alias.sh
 
-# Optional: Symlink other configs
-ln -sf ~/configs/direnvrc ~/.direnvrc
+# Run setup and sync
+csync setup
+csync
 ```
 
-That's it! The `.zshrc` file automatically points Oh My Zsh to use the custom directory in this repo.
+## What's Included
 
-## Contents
-
-- **zshrc** - Main Zsh configuration file
-- **zsh_custom/** - Oh My Zsh customizations
-  - **completions/** - Shell completions (eksctl, kind, kustomize, ripgrep)
-  - **themes/** - Custom themes (custom-bira)
-  - **plugins/** - Custom plugins (autoswitch_virtualenv via setup script)
-  - Git prompt patches
-- **setup_plugins.sh** - Script to install custom Oh My Zsh plugins from git repos
-- **k9s/** - Kubernetes CLI configuration
+### Zsh Configuration
+- **zshrc** - Main Zsh configuration with Oh My Zsh
+- **zsh_custom/** - Custom themes, completions, and plugins
 - **direnvrc** - direnv configuration
-- **ZSH.md** - Zsh quick reference guide
+- **setup_plugins.sh** - Plugin installer script
 
-## Customization
+### csync Tool  
+A beautiful Python-based config synchronization tool that:
+- 🔄 Syncs configurations across Mac, Linux, and EC2
+- 📌 Marks external files for syncing (like ~/.claude/)
+- 💾 Creates automatic backups before each sync
+- 🔗 Manages symlinks for config files
+- 🎨 Beautiful CLI with colors and formatting
 
-- Edit `zshrc` to modify plugins, aliases, or settings
-- Add your own completions to `zsh_custom/completions/`
-- Create local overrides in `~/.zshrc.local` (automatically sourced if it exists)
+## Common Commands
 
-## Zsh Startup Order
+```bash
+# Sync configurations
+csync
 
-**Login Shell:** `/etc/zshenv` → `~/.zshenv` → `/etc/zprofile` → `~/.zprofile` → `/etc/zshrc` → `~/.zshrc` → `/etc/zlogin` → `~/.zlogin`
+# Check status
+csync status
 
-**Interactive Shell:** `/etc/zshenv` → `~/.zshenv` → `/etc/zshrc` → `~/.zshrc`
+# Mark files for syncing across machines
+csync mark ~/.config/nvim
+csync mark ~/.claude/settings.json
+
+# List marked files
+csync list-marked
+
+# Create/restore backups
+csync backup
+csync restore
+
+# Install plugins and addons
+csync setup-addons
+```
+
+## How It Works
+
+### File Synchronization
+- **Repository files** - All files in this git repo sync normally
+- **Marked files** - External files can be marked for syncing (stored in `external/`)
+- **Local files** - Files ending in `.local` are never synced
+
+### Machine Detection
+- **Mac**: Uses `~/dev/configs` path
+- **Linux/EC2**: Uses `~/configs` path
+- Automatically detects and adapts to your environment
+
+### Marked Files
+When you mark a file with `csync mark`:
+1. File is copied to `external/` directory in the repo
+2. Original location gets a symlink to the repo copy
+3. File syncs across all your machines
+4. Symlinks are recreated on each machine
+
+## Examples
+
+### Daily Workflow
+```bash
+# Morning - sync latest changes
+csync
+
+# Make changes to configs...
+
+# Evening - sync changes back
+csync
+```
+
+### Managing External Configs
+```bash
+# Mark your vim config for syncing
+csync mark ~/.vimrc
+
+# Mark entire directories
+csync mark ~/.config/nvim
+
+# Stop syncing something
+csync unmark ~/.vimrc
+```
+
+### Handling Conflicts
+```bash
+# Preview changes
+csync sync --dry-run
+
+# Force your local changes
+csync sync --force-push
+
+# Accept remote changes
+csync sync --force-pull
+```
+
+## Troubleshooting
+
+**csync command not found**
+```bash
+source ~/configs/csync_alias.sh  # or add to .zshrc
+```
+
+**Merge conflicts**
+```bash
+csync sync --force-pull   # Accept remote
+# OR
+csync sync --force-push   # Keep local
+```
+
+**Missing dependencies**
+```bash
+cd ~/configs/csync
+uv sync
+```
+
+## Development
+
+The csync tool is built with:
+- **Python** with Click and Rich libraries
+- **uv** for package management
+- **ruff** for linting and formatting
+
+See `csync/README.md` for development details.
+
+## License
+
+MIT
