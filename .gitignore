@@ -22,3 +22,13 @@ zsh_custom/plugins/autoswitch_virtualenv/
 *.json
 *.feather
 *.tar.gz
+
+# Sync system files
+.sync/
+*.local
+*.backup
+*.bak
+*~
+
+# Node modules (if any)
+node_modules/

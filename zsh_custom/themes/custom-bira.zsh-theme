@@ -55,7 +55,26 @@ function nix_indicator() {
     echo "$nix_shell_emoji"
 }
 
-PROMPT="╭─$(nix_indicator)${current_dir}${git_prompt_info}${venv_prompt}${aws_profile}${kube_prompt}${utc_time}
+# Show sync status indicator
+function sync_indicator() {
+    # Detect correct sync status file path
+    local sync_file
+    if [[ -d "$HOME/dev/configs" ]]; then
+        sync_file="$HOME/dev/configs/.sync/sync-status"
+    else
+        sync_file="$HOME/configs/.sync/sync-status"
+    fi
+    
+    # Read and display status if file exists
+    if [[ -f "$sync_file" ]]; then
+        cat "$sync_file"
+    fi
+}
+
+# Include sync status in the prompt
+local sync_status='$(sync_indicator)'
+
+PROMPT="╭─$(nix_indicator)${sync_status}${current_dir}${git_prompt_info}${venv_prompt}${aws_profile}${kube_prompt}${utc_time}
 ╰─%B${user_symbol}%b"
 # PROMPT="╭─$(nix_indicator)${current_dir}${git_prompt_info}%<<${aws_profile}${utc_time}${kube_prompt}${venv_prompt}
 
