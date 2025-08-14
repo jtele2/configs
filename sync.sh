@@ -150,6 +150,44 @@ restore_backup() {
     return 0
 }
 
+# Function to create config symlinks
+create_symlinks() {
+    local force="${1:-false}"
+    
+    # Define symlinks to create
+    declare -A symlinks=(
+        ["$CONFIGS_DIR/zshrc"]="$HOME/.zshrc"
+        ["$CONFIGS_DIR/direnvrc"]="$HOME/.direnvrc"
+    )
+    
+    for source in "${!symlinks[@]}"; do
+        local target="${symlinks[$source]}"
+        
+        # Skip if source doesn't exist
+        [[ ! -f "$source" ]] && continue
+        
+        # Check if target already points to source
+        if [[ -L "$target" ]] && [[ "$(readlink "$target")" == "$source" ]]; then
+            continue
+        fi
+        
+        # Handle existing files
+        if [[ -e "$target" ]] || [[ -L "$target" ]]; then
+            if [[ "$force" == "true" ]]; then
+                log "  Replacing: $target" "$YELLOW"
+                rm -f "$target"
+            else
+                log "  Skipping: $target (already exists)" "$YELLOW"
+                continue
+            fi
+        fi
+        
+        # Create symlink
+        ln -sf "$source" "$target"
+        log "  ✓ Linked: $target → $source" "$GREEN"
+    done
+}
+
 # Function to setup sync environment
 setup_sync() {
     log "🔧 Setting up sync environment..." "$BLUE"
@@ -165,6 +203,10 @@ setup_sync() {
     
     # Create marked files list if it doesn't exist
     touch "$MARKED_FILES"
+    
+    # Create config symlinks
+    log "🔗 Creating config symlinks..." "$BLUE"
+    create_symlinks true
     
     # Create zshrc.local if it doesn't exist
     if [[ ! -f "$CONFIGS_DIR/zshrc.local" ]]; then
@@ -372,6 +414,34 @@ check_sync_status() {
     fi
 }
 
+# Function to setup addons (plugins, completions, etc.)
+setup_addons() {
+    log "🎨 Setting up addons and plugins..." "$CYAN"
+    
+    # Run setup_plugins.sh if it exists
+    if [[ -f "$CONFIGS_DIR/setup_plugins.sh" ]]; then
+        log "📦 Installing Oh My Zsh custom plugins..." "$BLUE"
+        bash "$CONFIGS_DIR/setup_plugins.sh"
+    else
+        log "⚠️  setup_plugins.sh not found" "$YELLOW"
+    fi
+    
+    # Install Oh My Zsh if not present
+    if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
+        log "💎 Oh My Zsh not found. Would you like to install it? (y/n)" "$YELLOW"
+        read -r response
+        if [[ "$response" == "y" ]]; then
+            log "Installing Oh My Zsh..." "$BLUE"
+            sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+            log "✅ Oh My Zsh installed" "$GREEN"
+        fi
+    fi
+    
+    # Additional addon setups can be added here
+    log "✅ Addon setup complete!" "$GREEN"
+    log "💡 Restart your shell or run 'source ~/.zshrc' to load changes" "$YELLOW"
+}
+
 # Function to perform sync
 sync_configs() {
     local force_push=false
@@ -555,7 +625,13 @@ sync_configs() {
     # Update last sync time
     if [[ "$dry_run" == "false" ]]; then
         date '+%Y-%m-%d %H:%M:%S' > "$LAST_SYNC_FILE"
-        [[ "$background" == "false" ]] && log "✅ Sync completed successfully!" "$GREEN"
+        
+        # Create/update symlinks after successful sync (not in background mode)
+        if [[ "$background" == "false" ]]; then
+            log "🔗 Updating config symlinks..." "$BLUE"
+            create_symlinks false
+            log "✅ Sync completed successfully!" "$GREEN"
+        fi
     else
         log "✅ Dry run completed" "$BLUE"
     fi
@@ -663,12 +739,17 @@ $(log "BACKUP & RECOVERY:" "$YELLOW")
   --restore [FILE]    Restore from backup (interactive if no file)
   --list-backups      List available backups
 
+$(log "ADDONS & SETUP:" "$YELLOW")
+  --setup-addons      Install plugins, completions, and other addons
+  --create-symlinks   Manually create config symlinks
+
 $(log "EXAMPLES:" "$YELLOW")
   $0                          # Normal sync
   $0 --setup                  # First-time setup
   $0 --mark ~/.config/app     # Mark external file for sync
   $0 --dry-run                # Preview sync changes
   $0 --force-pull             # Overwrite local with remote
+  $0 --setup-addons           # Install plugins and addons
 
 $(log "MACHINE PATHS:" "$YELLOW")
   Mac:    ~/dev/configs
@@ -726,6 +807,15 @@ main() {
                 log "Available backups:" "$CYAN"
                 ls -la "$BACKUP_DIR"/backup-*.tar.gz 2>/dev/null || log "No backups found" "$YELLOW"
                 exit 0
+                ;;
+            --setup-addons)
+                setup_addons
+                exit $?
+                ;;
+            --create-symlinks)
+                log "🔗 Creating config symlinks..." "$BLUE"
+                create_symlinks true
+                exit $?
                 ;;
             --force-push|--force-pull|--dry-run|--background)
                 sync_configs "$@"
