@@ -1,418 +1,325 @@
-# Config Sync System Design
+# Config Sync System
 
-This document outlines the design for a Git-based configuration sync system across three machines: work Mac, personal Mac, and EC2 instance, with support for selective file syncing through a marking system.
+A Git-based configuration synchronization tool for managing dotfiles and configurations across multiple machines (Mac and Linux/EC2).
 
-## System Overview
+## Features
 
-The sync system uses Git as the backbone with:
+- **Automatic conflict resolution** - Intelligent handling of merge conflicts with fallback strategies
+- **Machine-specific customization** - Support for `.local` files that aren't synced
+- **Selective file syncing** - Mark external files outside the repo for synchronization
+- **Automatic backups** - Creates timestamped backups before each sync operation
+- **Shell prompt integration** - Visual sync status indicator in your prompt
+- **Cross-platform support** - Automatically detects and adapts to Mac/Linux environments
 
-- Automatic conflict resolution
-- Machine-specific customization support
-- Selective file syncing via marking system
-- Automatic backups before each sync
-- Both repository files and marked external files
-- Shell prompt sync status indicator
-- Support for different config paths per machine
-
-## Architecture
-
-### Directory Structure
-
-**Mac (Work & Personal):**
-
-```text
-~/dev/configs/                  # Main repo on Mac machines
-├── .sync/                      # Sync metadata directory
-│   ├── machine-id              # Unique machine identifier
-│   ├── last-sync               # Timestamp of last successful sync
-│   ├── sync-status             # Current sync status for prompt
-│   ├── marked-files.txt        # List of external files to sync
-│   └── backups/                # Automatic backups before sync
-├── .gitignore                  # Excludes machine-specific files
-├── sync.sh                     # Main sync script (to be enhanced)
-├── zshrc                       # Main zsh config (in repo)
-├── zshrc.local                 # Machine-specific config (not synced)
-└── [other repo configs]        # Other config files in repo
-```
-
-**EC2 Instance:**
-
-```text
-~/configs/                      # Main repo on EC2 (different path!)
-├── [same structure as above]
-```
-
-**External marked files:**
-
-```text
-~/                              # External marked files
-├── .config/some-app/config     # Example external file marked for sync
-└── .tool/settings.json         # Another marked file
-```
-
-### Machine Detection
-
-The system auto-detects the environment and config path:
+## Quick Start
 
 ```bash
-# Detect if we're on EC2 or Mac
-if [[ -f /etc/ec2-metadata ]]; then
-    CONFIGS_DIR="$HOME/configs"
-    MACHINE_TYPE="ec2"
-elif [[ "$(uname)" == "Darwin" ]]; then
-    CONFIGS_DIR="$HOME/dev/configs"
-    MACHINE_TYPE="mac"
-fi
+# Clone the repository
+git clone git@github.com:jtele2/configs.git ~/configs  # On EC2/Linux
+git clone git@github.com:jtele2/configs.git ~/dev/configs  # On Mac
 
-# Machine ID includes type for clarity
-MACHINE_ID="${USER}@$(hostname -s)-${MACHINE_TYPE}"
+# Run initial setup
+./sync.sh --setup
+
+# Perform first sync
+./sync.sh
 ```
 
-### File Sync Categories
+## Installation
 
-1. **Repository Files**: All files tracked in the configs git repo
-2. **Marked External Files**: Files outside the repo explicitly marked for syncing
-3. **Local-Only Files**: Files with `.local` suffix or in .gitignore
+### Prerequisites
 
-## Core Features
+- Git installed and configured
+- SSH key set up for GitHub access
+- Bash shell (zsh compatible)
 
-### 1. File Marking System
+### Setup
 
-The marking system allows syncing files that live outside the repository:
+1. **Clone the repository** to the appropriate location:
+   - Mac: `~/dev/configs`
+   - Linux/EC2: `~/configs`
 
-**Design Approach:**
+2. **Run the setup command**:
+   ```bash
+   cd ~/configs  # or ~/dev/configs on Mac
+   ./sync.sh --setup
+   ```
 
-- Maintain a `.sync/marked-files.txt` manifest of external files to sync
-- Store copies of marked files in `.sync/external-files/` (gitignored locally)
-- Track the actual synced versions in a separate `external/` directory in the repo
-- Create symlinks from original locations to the synced copies
+3. **Configure machine-specific settings** in `zshrc.local` (created automatically)
 
-**Mark Command Flow:**
-
-1. User runs: `sync.sh --mark ~/.config/app/config`
-2. Script adds path to `.sync/marked-files.txt`
-3. Copies file to `~/configs/external/.config/app/config` (preserving path structure)
-4. Creates symlink from original location to the repo copy
-5. Commits the file to git
-
-**Unmark Command Flow:**
-
-1. User runs: `sync.sh --unmark ~/.config/app/config`
-2. Script removes path from `.sync/marked-files.txt`
-3. Replaces symlink with actual file copy
-4. Removes file from `external/` directory in repo
-
-### 2. Sync Operations
-
-**Normal Sync Flow:**
-
-1. Check network connectivity to GitHub
-2. Create backup of current state
-3. Stash any uncommitted changes
-4. Pull and rebase from remote
-5. Apply stashed changes
-6. Sync marked external files
-7. Commit any changes
-8. Push to remote
-
-**Conflict Resolution Priority:**
-
-1. Try rebase first (keeps linear history)
-2. Fall back to merge if rebase fails
-3. Offer force options (--force-push or --force-pull) for manual override
-
-### 3. Machine-Specific Customization
-
-**Approach:**
-
-- Use `.local` suffix for machine-specific files (e.g., `zshrc.local`)
-- Main configs source their `.local` variants if they exist
-- Machine ID based on `${USER}@$(hostname -s)`
-- Conditional logic in configs based on machine ID
-
-### 4. Backup System
-
-**Strategy:**
-
-- Create timestamped tar.gz before each sync
-- Include both repo files and marked external files
-- Exclude .git, .sync, and *.local files
-- Keep last 10 backups with automatic rotation
-- Store in `.sync/backups/`
-
-## Command Interface
+## Usage
 
 ### Basic Commands
 
 ```bash
-./sync.sh                    # Normal sync
-./sync.sh --setup            # Initial setup on new machine
-./sync.sh --status           # Show sync status and marked files
+# Perform normal sync
+./sync.sh
+
+# Show current status
+./sync.sh --status
+
+# Preview changes without syncing
+./sync.sh --dry-run
 ```
 
-### File Marking
+### Managing External Files
+
+Mark files outside the repository for synchronization:
 
 ```bash
-./sync.sh --mark PATH        # Mark a file/directory for syncing
-./sync.sh --unmark PATH      # Stop syncing a file/directory
-./sync.sh --list-marked      # List all marked files
+# Mark a file or directory for syncing
+./sync.sh --mark ~/.config/some-app/config
+
+# Stop syncing a file
+./sync.sh --unmark ~/.config/some-app/config
+
+# List all marked files
+./sync.sh --list-marked
 ```
 
-### Sync Control
+### Conflict Resolution
 
 ```bash
-./sync.sh --dry-run          # Preview what would happen
-./sync.sh --force-push       # Force local → remote
-./sync.sh --force-pull       # Force remote → local
-./sync.sh --backup-only      # Just create backup, no sync
+# Force push local changes (overwrites remote)
+./sync.sh --force-push
+
+# Force pull remote changes (overwrites local)
+./sync.sh --force-pull
 ```
 
-### Recovery
+### Backup and Recovery
 
 ```bash
-./sync.sh --restore          # Interactive restore from backup
-./sync.sh --restore DATE     # Restore specific backup
+# Create backup only (no sync)
+./sync.sh --backup
+
+# List available backups
+./sync.sh --list-backups
+
+# Restore from backup (interactive)
+./sync.sh --restore
+
+# Restore specific backup
+./sync.sh --restore backup-20240814-120000.tar.gz
 ```
 
-## Implementation Plan
+## Complete Command Reference
 
-### Phase 1: Core Sync Enhancement
+| Command | Description |
+|---------|-------------|
+| `./sync.sh` | Perform normal sync |
+| `./sync.sh --setup` | Initial setup on new machine |
+| `./sync.sh --status` | Show sync status and info |
+| `./sync.sh --help` | Display help message |
+| `./sync.sh --mark PATH` | Mark file/directory for syncing |
+| `./sync.sh --unmark PATH` | Stop syncing file/directory |
+| `./sync.sh --list-marked` | List all marked files |
+| `./sync.sh --dry-run` | Preview changes without syncing |
+| `./sync.sh --force-push` | Force push (overwrites remote) |
+| `./sync.sh --force-pull` | Force pull (overwrites local) |
+| `./sync.sh --backup` | Create backup only |
+| `./sync.sh --restore [FILE]` | Restore from backup |
+| `./sync.sh --list-backups` | List available backups |
+| `./sync.sh --background` | Run sync quietly in background |
 
-- [ ] Enhance existing sync.sh with better conflict resolution
-- [ ] Add dry-run mode for safety
-- [ ] Implement force-push and force-pull options
-- [ ] Add comprehensive logging with colors
-- [ ] Create setup function for new machines
+## How It Works
 
-### Phase 2: File Marking System
+### File Synchronization
 
-- [ ] Implement mark/unmark commands
-- [ ] Create manifest management for marked files
-- [ ] Add symlink creation and management
-- [ ] Implement external file sync logic
-- [ ] Add list-marked command
+1. **Repository files** - All files in the git repository are synced normally
+2. **Marked external files** - Files outside the repo can be marked for syncing
+3. **Local-only files** - Files with `.local` suffix are never synced
 
-### Phase 3: Backup and Recovery
+### Conflict Resolution
 
-- [ ] Enhance backup to include marked files
-- [ ] Implement backup rotation (keep last N)
-- [ ] Add restore functionality
-- [ ] Create backup-only mode
+The sync system uses intelligent conflict resolution:
 
-### Phase 4: Status and Monitoring
+1. **Rebase first** - Attempts to rebase local changes onto remote
+2. **Merge fallback** - Falls back to merge if rebase fails
+3. **Manual override** - Use `--force-push` or `--force-pull` when needed
 
-- [ ] Add status command showing:
-  - Current machine ID
-  - Last sync time
-  - Marked files status
-  - Pending changes
-- [ ] Add conflict detection warnings
-- [ ] Implement sync history tracking
+### Automatic Backups
 
-### Phase 5: Automation & UI
+- Creates timestamped backups before each sync
+- Keeps the last 10 backups automatically
+- Stores backups in `.sync/backups/`
+- Includes both repo and marked external files
 
-- [ ] Add to .zshrc for background sync
-- [ ] Add sync status indicator to shell prompt
-- [ ] Create sync status function for prompt
-- [ ] Test on all three machines
+## Shell Integration
 
-## Shell Prompt Integration
+### Prompt Status Indicator
 
-### Sync Status Indicator
+The sync system can display status in your shell prompt:
 
-Add a sync status indicator to the custom-bira.zsh-theme prompt:
+| Icon | Status | Meaning |
+|------|--------|----------|
+| ✓ | Synced | Everything up to date |
+| ↑ | Ahead | Local changes need pushing |
+| ↓ | Behind | Remote changes available |
+| ⚡ | Syncing | Sync in progress |
+| ✗ | Error | Sync failed or conflicts |
 
-**Status Icons:**
+### Automatic Background Sync
 
-- `✓` - Synced (green): Everything up to date
-- `↑` - Pending push (yellow): Local changes need pushing
-- `↓` - Pending pull (cyan): Remote changes available
-- `⚡` - Syncing (blue): Sync in progress
-- `✗` - Error/Conflict (red): Sync failed or conflicts exist
-- ` ` - No icon if sync disabled or not in configs repo
-
-**Implementation Approach:**
-
-1. Create a `sync_status()` function in sync.sh that outputs current status
-2. Write status to `.sync/sync-status` file for fast prompt access
-3. Add status check to custom-bira.zsh-theme
-4. Update status file during sync operations
-
-**Prompt Integration:**
+Add to your `.zshrc` for automatic syncing:
 
 ```bash
-# In custom-bira.zsh-theme
-function sync_indicator() {
-    local sync_file="$HOME/dev/configs/.sync/sync-status"
-    # On EC2, check ~/configs instead
-    [[ -f /etc/ec2-metadata ]] && sync_file="$HOME/configs/.sync/sync-status"
-    
-    if [[ -f "$sync_file" ]]; then
-        cat "$sync_file"
-    fi
-}
-
-# Add to PROMPT line
-local sync_status='$(sync_indicator)'
-PROMPT="╭─$(nix_indicator)${sync_status}${current_dir}..."
-```
-
-### Background Sync in .zshrc
-
-**Auto-sync Strategy:**
-
-```bash
-# In zshrc
-# Run sync in background on shell startup
+# Auto-sync on shell startup
 if [[ -d "$HOME/dev/configs" ]]; then
     (cd "$HOME/dev/configs" && ./sync.sh --background &>/dev/null &)
 elif [[ -d "$HOME/configs" ]]; then
     (cd "$HOME/configs" && ./sync.sh --background &>/dev/null &)
 fi
+```
 
-# Alias for manual sync
+### Useful Aliases
+
+```bash
 alias sync-configs='cd $([ -d "$HOME/dev/configs" ] && echo "$HOME/dev/configs" || echo "$HOME/configs") && ./sync.sh'
 alias sync-status='cd $([ -d "$HOME/dev/configs" ] && echo "$HOME/dev/configs" || echo "$HOME/configs") && ./sync.sh --status'
 ```
 
-## Technical Decisions
+## Directory Structure
 
-### Why Symlinks for Marked Files?
+```text
+~/configs/                    # Root directory (~/dev/configs on Mac)
+├── .sync/                    # Sync metadata (not synced)
+│   ├── machine-id           # Unique machine identifier
+│   ├── last-sync            # Last sync timestamp
+│   ├── sync-status          # Current status for prompt
+│   ├── marked-files.txt     # List of external files
+│   └── backups/             # Automatic backups
+├── external/                 # Marked external files
+├── sync.sh                   # This sync script
+├── zshrc                     # Main zsh config
+├── zshrc.local              # Machine-specific config (not synced)
+└── [other configs]          # Your configuration files
+```
 
-- Preserves original file locations expected by applications
-- Changes immediately reflected without needing sync
-- Easy to see what's managed (symlink indicator)
-- Simple to revert (replace symlink with file)
+## Machine-Specific Configuration
 
-### Why Separate external/ Directory?
+The system automatically detects your environment:
 
-- Keeps repository organized
-- Preserves original path structure
-- Avoids polluting repo root with random files
-- Makes it clear what's external vs native to configs repo
+- **Mac**: Uses `~/dev/configs` path
+- **Linux/EC2**: Uses `~/configs` path
 
-### Why Different Paths on Mac vs EC2?
+Machine-specific settings go in `zshrc.local`, which is:
+- Created automatically during setup
+- Never synced between machines
+- Sourced by the main `zshrc` file
 
-- Mac: `~/dev/configs` keeps all dev work organized in ~/dev
-- EC2: `~/configs` follows standard dotfile location
-- Auto-detection prevents configuration errors
+## Security Notes
 
-### Error Handling Strategy
+- Each machine uses its own SSH key
+- Never mark files containing secrets/passwords
+- Keep your GitHub repository private
+- Backups are stored locally and not encrypted
 
-- Never lose data (backup before operations)
-- Fail loudly and clearly (colored error messages)
-- Provide recovery suggestions
-- Default to manual intervention over data loss
+## Troubleshooting
 
-## Security Considerations
+### Common Issues
 
-1. **SSH Key Management**: Each machine uses its own SSH key
-2. **Sensitive Files**: Never mark files containing secrets/passwords
-3. **Private Repository**: Ensure GitHub repo remains private
-4. **Backup Encryption**: Consider encrypting backups (future enhancement)
+#### Config directory not found
 
-## Testing Strategy
+- Clone the repository first: `git clone git@github.com:jtele2/configs.git ~/configs`
 
-### Manual Test Cases
+#### Cannot reach remote repository
 
-1. Normal sync with no conflicts
-2. Sync with merge conflicts
-3. Mark and sync external file
-4. Restore from backup
-5. Force push/pull operations
-6. Network failure handling
-7. Setup on fresh machine
+- Check your network connection
+- Verify SSH key is set up: `ssh -T git@github.com`
 
-### Edge Cases to Test
+#### Merge failed - Manual intervention required
 
-- Simultaneous edits on both machines
-- Marking already-symlinked files
-- Unmarking deleted files
-- Syncing with dirty working directory
-- Large file handling
-- Binary file conflicts
+- Use `--force-pull` to accept remote changes
+- Use `--force-push` to keep local changes
+- Or manually resolve conflicts in the repository
 
-## Future Enhancements
+#### Symlink issues with marked files
 
-1. **Selective Sync**: Choose which marked files to sync
-2. **Sync Profiles**: Different sets of files for different contexts
-3. **Encryption**: Encrypted storage for sensitive configs
-4. **Diff Viewer**: Show changes before syncing
-5. **Sync Hooks**: Pre/post sync scripts for custom logic
-6. **Multi-Machine**: Support for 3+ machines
-7. **Partial Restores**: Restore individual files from backup
+- Check if the file still exists
+- Try unmarking and re-marking the file
 
-## Development TODO List
+### Getting Help
 
-### Immediate Tasks
+```bash
+# Show help message
+./sync.sh --help
 
-- [ ] Review and enhance existing sync.sh structure
-- [ ] Add proper argument parsing with getopts
-- [ ] Implement machine detection (Mac vs EC2)
-- [ ] Handle different config paths (~/dev/configs vs ~/configs)
-- [ ] Implement machine ID management with type suffix
-- [ ] Add .gitignore entries for .sync/ and *.local
+# Check current status
+./sync.sh --status
 
-### Core Sync Tasks  
+# Preview changes without syncing
+./sync.sh --dry-run
+```
 
-- [ ] Implement stash/unstash logic
-- [ ] Add rebase-first, merge-fallback strategy
-- [ ] Create force-push and force-pull functions
-- [ ] Add dry-run mode throughout
-- [ ] Implement proper exit codes
-- [ ] Add --background mode for .zshrc
+## Examples
 
-### Marking System Tasks
+### Initial Setup on New Machine
 
-- [ ] Create mark_file() function
-- [ ] Create unmark_file() function
-- [ ] Implement manifest file management
-- [ ] Add symlink utilities
-- [ ] Create external/ directory structure
+```bash
+# Clone the repository
+git clone git@github.com:jtele2/configs.git ~/configs
 
-### Backup Tasks
+# Run setup
+cd ~/configs
+./sync.sh --setup
 
-- [ ] Enhance backup function with marked files
-- [ ] Implement rotation logic
-- [ ] Create restore function
-- [ ] Add backup listing
+# Edit machine-specific settings
+vim zshrc.local
 
-### Shell Prompt Integration
+# Perform first sync
+./sync.sh
+```
 
-- [ ] Create sync_status() function
-- [ ] Implement .sync/sync-status file updates
-- [ ] Add sync_indicator() to custom-bira.zsh-theme
-- [ ] Test prompt on all three machines
-- [ ] Add color coding for different states
+### Daily Workflow
 
-### UI/UX Tasks
+```bash
+# Check status before working
+./sync.sh --status
 
-- [ ] Add comprehensive help text
-- [ ] Implement status display
-- [ ] Add progress indicators
-- [ ] Create confirmation prompts for destructive operations
-- [ ] Add verbose mode option
+# Sync latest changes
+./sync.sh
 
-### Testing Tasks
+# Make your changes...
 
-- [ ] Create test harness
-- [ ] Write test cases for each command
-- [ ] Test on work Mac (~/dev/configs)
-- [ ] Test on personal Mac (~/dev/configs)
-- [ ] Test on EC2 instance (~/configs)
-- [ ] Test cross-machine syncing scenarios
-- [ ] Document known issues and solutions
+# Sync changes back
+./sync.sh
+```
 
-## Success Criteria
+### Managing External Configs
 
-The sync system is successful when:
+```bash
+# Mark your vim config for syncing
+./sync.sh --mark ~/.vimrc
 
-1. Configs stay synchronized across all three machines (work Mac, personal Mac, EC2) without manual intervention
-2. Machine-specific settings remain isolated per environment
-3. External files can be selectively synced
-4. Conflicts are handled gracefully
-5. Data loss is impossible (via backups)
-6. The system requires zero maintenance once set up
-7. Shell prompt shows real-time sync status
-8. Different config paths (~/dev/configs vs ~/configs) are handled automatically
-9. Background sync doesn't slow down shell startup
+# Mark entire config directory
+./sync.sh --mark ~/.config/nvim
+
+# List what's being synced
+./sync.sh --list-marked
+
+# Stop syncing something
+./sync.sh --unmark ~/.vimrc
+```
+
+### Handling Conflicts
+
+```bash
+# Preview what would happen
+./sync.sh --dry-run
+
+# If conflicts exist, choose strategy:
+# Keep local changes
+./sync.sh --force-push
+
+# OR keep remote changes
+./sync.sh --force-pull
+```
+
+## License
+
+MIT License - Feel free to adapt this for your own use.
+
+## Author
+
+Created for managing dotfiles across multiple development environments.
