@@ -28,5 +28,10 @@
     "type": "command",
     "command": "npx -y ccstatusline@latest",
     "padding": 0
+  },
+  "permissions": {
+    "ask": [
+      "Bash(rm:*)"
+    ]
   }
 }
