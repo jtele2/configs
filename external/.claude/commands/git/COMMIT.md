@@ -12,7 +12,7 @@ Create well-formatted commits with conventional commit messages and emoji.
 
 1. Performs `git diff --cached` to understand what changes are being committed
 2. Creates a commit message using emoji conventional commit format
-3. Always performs the commit (no checking for staged files)
+3. Always performs the commit (no checking for staged files), and don't ask for permission to commit
 4. If a message argument is provided, uses it as guidance for the commit message
 
 ## Commit Message Guidelines
