@@ -1,0 +1,27 @@
+{
+    "includeCoAuthoredBy": false,
+    "hooks": {
+        "PostToolUse": [
+            {
+                "matcher": "Edit|MultiEdit|Write",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "/home/ubuntu/.claude/format-python.sh"
+                    }
+                ]
+            }
+        ],
+        "Notification": [
+            {
+                "matcher": "",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "notify-send 'Claude Code' 'Awaiting your input'"
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -19,7 +19,7 @@ zsh_custom/plugins/autoswitch_virtualenv/
 
 # File types
 *.csv
-*.json
+# *.json  # Commented out to allow syncing marked JSON files
 *.feather
 *.tar.gz
 
