@@ -289,14 +289,15 @@ mark_file() {
         return 1
     fi
     
-    # Check if already marked
-    if grep -q "^$file_path$" "$MARKED_FILES" 2>/dev/null; then
+    # Calculate relative path from HOME
+    local rel_path="${file_path#$HOME/}"
+    
+    # Check if already marked (using relative path)
+    if grep -q "^$rel_path$" "$MARKED_FILES" 2>/dev/null; then
         log "ℹ️  File already marked: $file_path" "$YELLOW"
         return 0
     fi
     
-    # Calculate relative path for external directory
-    local rel_path="${file_path#$HOME/}"
     local external_path="$EXTERNAL_DIR/$rel_path"
     local external_parent=$(dirname "$external_path")
     
@@ -314,12 +315,13 @@ mark_file() {
     rm -rf "$file_path"
     ln -s "$external_path" "$file_path"
     
-    # Add to marked files list
-    echo "$file_path" >> "$MARKED_FILES"
+    # Add to marked files list (store relative path)
+    echo "$rel_path" >> "$MARKED_FILES"
     
     # Add to git
     cd "$CONFIGS_DIR"
     git add "$external_path"
+    git add "$MARKED_FILES"
     git commit -m "Mark file for sync: $rel_path"
     
     log "✅ Marked for sync: $file_path" "$GREEN"
@@ -335,14 +337,15 @@ unmark_file() {
     # Resolve to absolute path
     file_path=$(realpath "$file_path" 2>/dev/null || echo "$file_path")
     
-    # Check if marked
-    if ! grep -q "^$file_path$" "$MARKED_FILES" 2>/dev/null; then
+    # Calculate relative path
+    local rel_path="${file_path#$HOME/}"
+    
+    # Check if marked (using relative path)
+    if ! grep -q "^$rel_path$" "$MARKED_FILES" 2>/dev/null; then
         log "ℹ️  File not marked: $file_path" "$YELLOW"
         return 0
     fi
     
-    # Calculate paths
-    local rel_path="${file_path#$HOME/}"
     local external_path="$EXTERNAL_DIR/$rel_path"
     
     # Replace symlink with actual file
@@ -355,13 +358,14 @@ unmark_file() {
         fi
     fi
     
-    # Remove from marked files list
-    grep -v "^$file_path$" "$MARKED_FILES" > "$MARKED_FILES.tmp"
+    # Remove from marked files list (using relative path)
+    grep -v "^$rel_path$" "$MARKED_FILES" > "$MARKED_FILES.tmp"
     mv "$MARKED_FILES.tmp" "$MARKED_FILES"
     
     # Remove from git
     cd "$CONFIGS_DIR"
     git rm -r "$external_path" 2>/dev/null
+    git add "$MARKED_FILES"
     git commit -m "Unmark file from sync: $rel_path"
     
     log "✅ Unmarked from sync: $file_path" "$GREEN"
@@ -377,11 +381,15 @@ list_marked_files() {
     fi
     
     log "Files marked for sync:" "$CYAN"
-    while IFS= read -r file; do
+    while IFS= read -r rel_path; do
+        # Convert relative path to absolute for current machine
+        local file="$HOME/$rel_path"
         if [[ -L "$file" ]]; then
             echo "  ✓ $file"
-        else
+        elif [[ -e "$file" ]]; then
             echo "  ⚠ $file (not linked)"
+        else
+            echo "  ✗ $file (not found - will be created on sync)"
         fi
     done < "$MARKED_FILES"
 }
@@ -390,18 +398,49 @@ list_marked_files() {
 sync_marked_files() {
     [[ ! -s "$MARKED_FILES" ]] && return 0
     
-    while IFS= read -r file_path; do
-        local rel_path="${file_path#$HOME/}"
+    log "📂 Syncing marked files..." "$BLUE"
+    local synced_count=0
+    
+    while IFS= read -r rel_path; do
+        # Skip empty lines
+        [[ -z "$rel_path" ]] && continue
+        
+        # Convert relative path to absolute for current machine
+        local file_path="$HOME/$rel_path"
         local external_path="$EXTERNAL_DIR/$rel_path"
         
-        # Ensure symlink exists
-        if [[ ! -L "$file_path" ]] && [[ -e "$external_path" ]]; then
-            if [[ -e "$file_path" ]]; then
+        # Check if external file exists in repo
+        if [[ ! -e "$external_path" ]]; then
+            log "  ⚠ External file missing: $rel_path" "$YELLOW"
+            continue
+        fi
+        
+        # Create parent directory if needed
+        local parent_dir=$(dirname "$file_path")
+        if [[ ! -d "$parent_dir" ]]; then
+            mkdir -p "$parent_dir"
+            log "  📁 Created directory: $parent_dir" "$GREEN"
+        fi
+        
+        # Create or update symlink
+        if [[ ! -L "$file_path" ]] || [[ "$(readlink "$file_path" 2>/dev/null)" != "$external_path" ]]; then
+            # Remove existing file/link if present
+            if [[ -e "$file_path" ]] || [[ -L "$file_path" ]]; then
                 rm -rf "$file_path"
             fi
+            
+            # Create symlink
             ln -s "$external_path" "$file_path"
+            log "  ✓ Linked: $file_path → $external_path" "$GREEN"
+            ((synced_count++))
         fi
     done < "$MARKED_FILES"
+    
+    if [[ $synced_count -gt 0 ]]; then
+        log "  ✅ Synced $synced_count marked file(s)" "$GREEN"
+    else
+        log "  ℹ️  All marked files already in sync" "$CYAN"
+    fi
 }
 
 # Function to check sync status
