@@ -1,12 +1,10 @@
 """Status display functionality."""
 
-from datetime import datetime
 from pathlib import Path
 
 import git
 from rich.console import Console
 from rich.panel import Panel
-from rich.table import Table
 
 from csync.config import Config
 
@@ -93,7 +91,7 @@ class StatusDisplay:
 
         # Machine info
         machine_id = self.config.get_machine_id()
-        status_info.append(f"[bold cyan]📍 Machine Info[/bold cyan]")
+        status_info.append("[bold cyan]📍 Machine Info[/bold cyan]")
         status_info.append(f"  Type: {self.config.machine_type}")
         status_info.append(f"  ID: {machine_id}")
         status_info.append(f"  Config Path: {self.config.configs_dir}")
@@ -101,7 +99,7 @@ class StatusDisplay:
 
         # Sync status
         status = self.check_sync_status()
-        status_info.append(f"[bold cyan]📊 Sync Status[/bold cyan]")
+        status_info.append("[bold cyan]📊 Sync Status[/bold cyan]")
 
         status_messages = {
             "synced": "  [green]✓ Synced[/green] - Everything up to date",
@@ -122,7 +120,7 @@ class StatusDisplay:
         status_info.append("")
 
         # Marked files
-        status_info.append(f"[bold cyan]📁 Marked Files[/bold cyan]")
+        status_info.append("[bold cyan]📁 Marked Files[/bold cyan]")
         marked_count = 0
         if self.config.marked_files.exists():
             marked_files = [
@@ -132,17 +130,13 @@ class StatusDisplay:
 
         status_info.append(f"  Count: {marked_count} files")
 
-        if 0 < marked_count <= 5:
+        if marked_count > 0:
             for file in marked_files:
                 status_info.append(f"    - {file}")
-        elif marked_count > 5:
-            for file in marked_files[:3]:
-                status_info.append(f"    - {file}")
-            status_info.append(f"    ... and {marked_count - 3} more")
         status_info.append("")
 
         # Symlinked files
-        status_info.append(f"[bold cyan]🔗 Symlinked Files[/bold cyan]")
+        status_info.append("[bold cyan]🔗 Symlinked Files[/bold cyan]")
         symlinks = self._get_symlinked_files()
         symlink_count = len(symlinks)
         status_info.append(f"  Count: {symlink_count} symlinks")
@@ -155,7 +149,7 @@ class StatusDisplay:
         status_info.append("")
 
         # Backups
-        status_info.append(f"[bold cyan]💾 Backups[/bold cyan]")
+        status_info.append("[bold cyan]💾 Backups[/bold cyan]")
         backups = list(self.config.backup_dir.glob("backup-*.tar.gz"))
         backup_count = len(backups)
         status_info.append(f"  Count: {backup_count} backups")
@@ -167,7 +161,7 @@ class StatusDisplay:
 
         # Git status
         if self.repo:
-            status_info.append(f"[bold cyan]🔧 Git Status[/bold cyan]")
+            status_info.append("[bold cyan]🔧 Git Status[/bold cyan]")
             status_info.append(f"  Branch: {self.config.branch}")
             changes = len(self.repo.index.diff(None)) + len(self.repo.untracked_files)
             status_info.append(f"  Uncommitted changes: {changes}")
