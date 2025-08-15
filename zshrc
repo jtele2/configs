@@ -78,6 +78,7 @@ export VISUAL='code'
 
 # Aliases
 alias l='ls -alh'
+alias c='claude --dangerously-skip-permissions'
 
 # Platform-specific settings
 if [[ "$OSTYPE" == "darwin"* ]]; then
