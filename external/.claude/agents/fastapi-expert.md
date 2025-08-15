@@ -1,7 +1,8 @@
 ---
 name: fastapi-expert
-description: FastAPI development with an emphasis on best practices, optimization, and robust design patterns.
-model: claude-opus-4-1
+description: FastAPI development with an emphasis on best practices, optimization, and robust design patterns. Use PROACTIVELY for api development and refactoring.
+model: inherit
+color: cyan
 ---
 
 ## Focus Areas
