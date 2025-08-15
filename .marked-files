@@ -3,3 +3,4 @@
 .claude/settings.json
 .config/ccstatusline/settings.json
 .claude/commands
+.claude/agents
