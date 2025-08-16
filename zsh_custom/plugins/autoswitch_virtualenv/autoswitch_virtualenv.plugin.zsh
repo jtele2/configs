@@ -230,7 +230,18 @@ function _default_venv()
     elif [[ -n "$VIRTUAL_ENV" ]]; then
         local venv_name="$(_get_venv_name "$VIRTUAL_ENV" "$venv_type")"
         _autoswitch_message "Deactivating: ${AUTOSWITCH_BOLD}${AUTOSWITCH_PURPLE}%s${AUTOSWITCH_NORMAL}\n" "$venv_name"
-        deactivate
+        if type deactivate > /dev/null 2>&1; then
+            deactivate
+        else
+            # Just unset the environment variables if deactivate isn't available
+            unset VIRTUAL_ENV
+            unset VIRTUAL_ENV_PROMPT
+            # Reset PATH if needed
+            if [[ -n "$_OLD_VIRTUAL_PATH" ]]; then
+                PATH="$_OLD_VIRTUAL_PATH"
+                unset _OLD_VIRTUAL_PATH
+            fi
+        fi
     fi
 }
 
