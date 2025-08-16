@@ -6,6 +6,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Personal configuration repository with automatic cross-machine synchronization using **csync** - a Python-based dotfile manager that supports Mac, Linux, and EC2 environments.
 
+## Available CLI Commands
+
+**csync** - Default command runs sync
+**csync sync** - Synchronize with options (--dry-run, --force-push, --force-pull, --background)
+**csync status** - Show sync status and machine information
+**csync setup** - Initial setup on new machine
+**csync mark** - Mark file/directory for syncing across machines
+**csync unmark** - Stop syncing a file/directory
+**csync list-marked** - List all marked files
+**csync backup** - Create backup without syncing
+**csync restore** - Restore from backup
+**csync list-backups** - List available backups
+**csync create-symlinks** - Manually create config symlinks (--force to overwrite)
+**csync setup-addons** - Install Oh My Zsh plugins and completions
+
 ## Quick Commands
 
 ### Sync Operations
@@ -80,7 +95,8 @@ csync create-symlinks --force
 cd csync && uv run csync [command]
 
 # Using alias (after sourcing)
-source csync_alias.sh
+source ~/dev/configs/csync_alias.sh  # Mac
+source ~/configs/csync_alias.sh       # Linux/EC2
 csync [command]
 ```
 
@@ -194,7 +210,10 @@ uv run pytest tests/ -v
 uv run pytest tests/test_gitignore_compliance.py -v
 
 # With coverage
-uv run pytest --cov=csync tests/
+uv run pytest --cov=src/csync tests/
+
+# Run single test by name
+uv run pytest -k "test_name" -v
 ```
 
 ## Important Patterns
@@ -265,3 +284,24 @@ cd csync && ./run_tests.sh
 git check-ignore __pycache__/
 git check-ignore settings.local.json
 ```
+
+## Environment Variables
+
+- `SYNC_BRANCH` - Git branch to sync (default: main)
+- `SYNC_REMOTE` - Git remote name (default: origin)
+
+## Package Dependencies
+
+**Core Dependencies (pyproject.toml)**
+
+- `click>=8.1.0` - CLI framework
+- `rich>=13.0.0` - Terminal formatting
+- `gitpython>=3.1.0` - Git operations
+- `pyyaml>=6.0` - YAML config files
+
+**Dev Dependencies**
+
+- `ruff>=0.12.8` - Linting and formatting
+- `pytest>=7.0.0` - Testing framework
+- `pytest-cov>=4.0.0` - Coverage plugin
+- `pytest-mock>=3.0.0` - Mock fixtures
