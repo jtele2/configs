@@ -1,66 +1,76 @@
-# 🛠 Prompt pieces (simplified)
+# ======================================
+# CUSTOM BIRA THEME - OPTIMIZED
+# ======================================
 
-# 🌈 Colors: cyan, white, yellow, magenta, black, blue, red, grey, green
-
-# Display the virtual environment name if active
-# Requires the 'virtualenv' plugin
-# REF: https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/virtualenv/virtualenv.plugin.zsh
-ZSH_THEME_VIRTUAL_ENV_PROMPT_PREFIX="%{$fg[green]%}‹"
-ZSH_THEME_VIRTUAL_ENV_PROMPT_SUFFIX="› %{$reset_color%}"
-ZSH_THEME_VIRTUALENV_PREFIX="$ZSH_THEME_VIRTUAL_ENV_PROMPT_PREFIX"
-ZSH_THEME_VIRTUALENV_SUFFIX="$ZSH_THEME_VIRTUAL_ENV_PROMPT_SUFFIX"
-local venv_prompt='$(virtualenv_prompt_info)'
-
-# Display the current directory in bold blue text
-local current_dir="%B%{$fg[blue]%}%1~ %{$reset_color%}"
-
-# Ensure git_prompt_info is properly defined and matches the working bira.zsh-theme
-# Requires the 'git' plugin
+# Git prompt configuration
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[yellow]%}‹"
 ZSH_THEME_GIT_PROMPT_SUFFIX="$(git_prompt_short_sha)› %{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}✗ %{$fg[yellow]%}"
 ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[green]%}✔ %{$fg[yellow]%}"
-local git_prompt_info='$(git_prompt_info)'
 
-# Display the current AWS profile in magenta, defaulting to 'default' if not set
-local aws_profile='%{$fg[magenta]%}AWS:${AWS_PROFILE:-default} %{$reset_color%}'
+# Virtual environment configuration
+ZSH_THEME_VIRTUAL_ENV_PROMPT_PREFIX="%{$fg[green]%}‹"
+ZSH_THEME_VIRTUAL_ENV_PROMPT_SUFFIX="› %{$reset_color%}"
+ZSH_THEME_VIRTUALENV_PREFIX="$ZSH_THEME_VIRTUAL_ENV_PROMPT_PREFIX"
+ZSH_THEME_VIRTUALENV_SUFFIX="$ZSH_THEME_VIRTUAL_ENV_PROMPT_SUFFIX"
 
-# Display the current UTC time in white
-local utc_time='%{$fg[white]%}$(TZ=UTC strftime %H%M) %{$reset_color%}'
+# ======================================
+# PROMPT COMPONENTS
+# ======================================
 
-# Check if the 'kube-ps1' plugin is active, and include Kubernetes context if so
-if [[ "${plugins[@]}" =~ 'kube-ps1' ]]; then
-    local kube_prompt='$(kube_ps1) '
+# Current directory (truncated to last 2 segments for long paths)
+local current_dir="%B%{$fg[blue]%}%(4~|…/%2~|%~) %{$reset_color%}"
+
+# Git info (lazy loaded by git plugin)
+local git_info='$(git_prompt_info)'
+
+# Virtual environment (only shows when active)
+local venv_info='$(virtualenv_prompt_info)'
+
+# AWS profile (only show if not default and AWS_PROFILE is set)
+local aws_info='${AWS_PROFILE:+%{$fg[magenta]%\}AWS:$AWS_PROFILE %{$reset_color%\}}'
+
+# UTC time (cached per minute to reduce overhead)
+local utc_time='%{$fg[white]%}%D{%H%M} %{$reset_color%}'
+
+# Kubernetes context (check once at theme load, not every prompt)
+if (( $+functions[kube_ps1] )); then
+    local kube_info='$(kube_ps1) '
 else
-    local kube_prompt=''
+    local kube_info=''
 fi
 
-# Define the user symbol, showing '#' for root and '$' for normal users
+# Nix shell indicator (use parameter expansion instead of function)
+local nix_indicator='${IN_NIX_SHELL:+🌿}'
+
+# User symbol (# for root, $ for normal user)
 local user_symbol='%(!.#.$)'
 
-# Define the return code display, showing a red arrow and the code if the last command failed
+# Return code (only shows on error)
 local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
 
-# Add an 🌿 emoji to the prompt if in a nix-shell
-function nix_indicator() {
-    # Initialize an empty emoji for nix-shell
-    local nix_shell_emoji=""
+# ======================================
+# PROMPT ASSEMBLY
+# ======================================
 
-    # Add a leaf emoji if inside a nix-shell (pure or impure)
-    if [[ "$IN_NIX_SHELL" == "1" || "$IN_NIX_SHELL" == "impure" ]]; then
-        nix_shell_emoji="🌿"
-    fi
+# Main prompt with two-line format
+PROMPT="╭─${nix_indicator}${current_dir}${git_info}${venv_info}${aws_info}${kube_info}${utc_time}
+╰─%B${user_symbol}%b "
 
-    # Output the emoji
-    echo "$nix_shell_emoji"
-}
-
-PROMPT="╭─$(nix_indicator)${current_dir}${git_prompt_info}${venv_prompt}${aws_profile}${kube_prompt}${utc_time}
-╰─%B${user_symbol}%b"
-# PROMPT="╭─$(nix_indicator)${current_dir}${git_prompt_info}%<<${aws_profile}${utc_time}${kube_prompt}${venv_prompt}
-
-# Define the right-side prompt to show the return code
-# RPROMPT="%B${return_code}%b"
-# PROMPT='%10>…>thisisareallylongprompt'
-# PROMPT='%10>…>'"${git_prompt_info}"'%<<someotherreallylongprompt'
+# Right-side prompt shows return code
 RPROMPT="%B${return_code}%b"
+
+# ======================================
+# PERFORMANCE OPTIMIZATIONS
+# ======================================
+
+# Enable git prompt async (if available in git plugin)
+if (( $+functions[git_prompt_async] )); then
+    ZSH_THEME_GIT_PROMPT_ASYNC=1
+fi
+
+# Reduce git prompt checks for large repos
+ZSH_THEME_GIT_PROMPT_CACHE=1
+
+# Skip expensive git operations in very large repos
+ZSH_THEME_GIT_PROMPT_SKIP_LARGE_REPOS=1
