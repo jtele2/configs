@@ -10,6 +10,15 @@
             "command": "$HOME/.claude/format-python.sh"
           }
         ]
+      },
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/lint-markdown.sh"
+          }
+        ]
       }
     ],
     "Notification": [
